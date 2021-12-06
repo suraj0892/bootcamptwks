@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 class BookServiceTest {
@@ -59,5 +60,14 @@ class BookServiceTest {
 
         assertEquals(50, books.size());
         assertEquals(books.get(0).getAuthorName(), "Cassandra Clare");
+    }
+
+    @Test
+    void ShouldNotBeAbleToLoadWhenThereIsValidationError() throws IOException {
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        InputStream bookList = classloader.getResourceAsStream("error.csv");
+        MockMultipartFile file = new MockMultipartFile("file", bookList );
+
+        assertThrows(Exception.class, ()-> bookService.upload(file));
     }
 }
