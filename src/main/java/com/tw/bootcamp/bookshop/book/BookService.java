@@ -1,5 +1,9 @@
 package com.tw.bootcamp.bookshop.book;
 
+import com.tw.bootcamp.bookshop.money.Money;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,21 +29,28 @@ public class BookService {
         return bookRepository.findAllByOrderByNameAsc();
     }
 
-    public List<Book> upload(@RequestParam("file") MultipartFile file) {
+    public List<Book> upload(@RequestParam("file") MultipartFile file) throws IOException {
 
-        try(BufferedReader fileReader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
-            ){
+        try (BufferedReader fileReader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
 
+             CSVParser csvParser = new CSVParser(fileReader,
+                     CSVFormat.DEFAULT.withFirstRecordAsHeader()
+                             .withIgnoreHeaderCase()
+                             .withTrim());) {
 
+            List<Book> books = new ArrayList<Book>();
+
+            Iterable<CSVRecord> bookRecords = csvParser.getRecords();
+
+            for (CSVRecord bookRecord : bookRecords) {
+                Book book = Book.builder().name(bookRecord.get("title"))
+                        .authorName(bookRecord.get("author"))
+                        .price(Money.rupees(Double.parseDouble(bookRecord.get("price")))).build();
+
+                books.add(book);
+            }
+            return bookRepository.saveAll(books);
         }
-        catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        return new ArrayList<>();
     }
 
 

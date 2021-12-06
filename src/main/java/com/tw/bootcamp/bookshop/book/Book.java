@@ -25,4 +25,5 @@ public class Book {
     private String authorName;
     @Embedded
     private Money price;
+
 }

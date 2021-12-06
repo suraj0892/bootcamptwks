@@ -53,12 +53,11 @@ class BookServiceTest {
     void ShouldBeAbleToLoadBooks() throws IOException {
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         InputStream bookList = classloader.getResourceAsStream("test.csv");
-
         MockMultipartFile file = new MockMultipartFile("file", bookList );
 
         List<Book> books = bookService.upload(file);
 
-        assertEquals(0, books.size());
-
+        assertEquals(50, books.size());
+        assertEquals(books.get(0).getAuthorName(), "Cassandra Clare");
     }
 }
