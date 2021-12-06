@@ -74,12 +74,12 @@ class BookServiceTest {
 
     @Test
     void shouldListBooksWhenTitleMatches() {
-        Book wingsOfFire = new BookTestBuilder().withName("Wings of Fire").withAuthor("").build();
-        Book animalFarm = new BookTestBuilder().withName("Animal Farm").withAuthor("").build();
+        Book wingsOfFire = new BookTestBuilder().withName("Wings of Fire").withAuthor("Author").build();
+        Book animalFarm = new BookTestBuilder().withName("Animal Farm").withAuthor("Author").build();
         bookRepository.save(wingsOfFire);
         bookRepository.save(animalFarm);
 
-        List<Book> books = bookService.search(wingsOfFire.getName(), wingsOfFire.getAuthorName());
+        List<Book> books = bookService.search(wingsOfFire.getName(), "");
 
         assertEquals(1, books.size());
         assertEquals(wingsOfFire.getName(), books.get(0).getName());
@@ -87,24 +87,24 @@ class BookServiceTest {
 
     @Test
     void shouldNotListBooksWhenTitleDoesNotMatches() {
-        Book wingsOfFire = new BookTestBuilder().withName("Wings of Fire").withAuthor("").build();
-        Book animalFarm = new BookTestBuilder().withName("Animal Farm").withAuthor("").build();
+        Book wingsOfFire = new BookTestBuilder().withName("Wings of Fire").withAuthor("Author").build();
+        Book animalFarm = new BookTestBuilder().withName("Animal Farm").withAuthor("Author").build();
         bookRepository.save(wingsOfFire);
         bookRepository.save(animalFarm);
 
-        List<Book> books = bookService.search("Harry Potter", wingsOfFire.getAuthorName());
+        List<Book> books = bookService.search("Harry Potter", "");
 
         assertEquals(0, books.size());
     }
 
     @Test
     void shouldListBooksWhenAuthorMatches() {
-        Book wingsOfFire = new BookTestBuilder().withAuthor("Wings of Fire").withName("").build();
-        Book animalFarm = new BookTestBuilder().withAuthor("Animal Farm").withName("").build();
+        Book wingsOfFire = new BookTestBuilder().withAuthor("Wings of Fire").withName("Title").build();
+        Book animalFarm = new BookTestBuilder().withAuthor("Animal Farm").withName("Title").build();
         bookRepository.save(wingsOfFire);
         bookRepository.save(animalFarm);
 
-        List<Book> books = bookService.search(wingsOfFire.getName(), wingsOfFire.getAuthorName());
+        List<Book> books = bookService.search("", wingsOfFire.getAuthorName());
 
         assertEquals(1, books.size());
         assertEquals(wingsOfFire.getAuthorName(), books.get(0).getAuthorName());
@@ -112,12 +112,12 @@ class BookServiceTest {
 
     @Test
     void shouldNotListBooksWhenAuthorDoesNotMatches() {
-        Book wingsOfFire = new BookTestBuilder().withAuthor("Wings of Fire").withName("").build();
-        Book animalFarm = new BookTestBuilder().withAuthor("Animal Farm").withName("").build();
+        Book wingsOfFire = new BookTestBuilder().withAuthor("Wings of Fire").withName("Title").build();
+        Book animalFarm = new BookTestBuilder().withAuthor("Animal Farm").withName("Title").build();
         bookRepository.save(wingsOfFire);
         bookRepository.save(animalFarm);
 
-        List<Book> books = bookService.search(wingsOfFire.getName(), "Harry Potter");
+        List<Book> books = bookService.search("", "Harry Potter");
 
         assertEquals(0, books.size());
     }
