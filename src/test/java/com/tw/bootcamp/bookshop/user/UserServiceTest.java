@@ -58,9 +58,7 @@ class UserServiceTest {
     @Test
     void shouldNotCreateUserWhenInputIsInvalid() {
         CreateUserRequest invalidRequest = new CreateUserRequestTestBuilder().withEmptyEmail().build();
-        when(validator.validate(any(User.class))).thenThrow(ConstraintViolationException.class);
-
-        assertThrows(ConstraintViolationException.class, () -> userService.create(invalidRequest));
+        assertThrows(InvalidEmailException.class, () -> userService.create(invalidRequest));
     }
 
     @Test

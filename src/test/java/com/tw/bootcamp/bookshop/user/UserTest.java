@@ -32,7 +32,7 @@ class UserTest {
         Set<ConstraintViolation<User>> constraintViolations = constraintsValidator().validate(user);
 
         assertFalse(constraintViolations.isEmpty());
-        assertEquals("Password is mandatory", constraintViolations.iterator().next().getMessage());
+        assertEquals("Password can't be empty", constraintViolations.iterator().next().getMessage());
     }
 
     @Test

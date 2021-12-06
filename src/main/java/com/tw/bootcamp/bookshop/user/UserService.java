@@ -29,7 +29,7 @@ public class UserService implements UserDetailsService {
         }
         Optional<User> user = userRepository.findByEmail(userRequest.getEmail());
         if (user.isPresent()) {
-            throw new InvalidEmailException("Email Id Already Exists");
+            throw new InvalidEmailException("User with same email already created");
         }
         User newUser = User.create(userRequest);
         validator.validate(newUser);
