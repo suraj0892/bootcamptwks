@@ -1,5 +1,7 @@
 package com.tw.bootcamp.bookshop.book;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.tw.bootcamp.bookshop.money.Money;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,6 +16,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 @Table(name = "books")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

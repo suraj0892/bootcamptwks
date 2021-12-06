@@ -2,7 +2,10 @@ package com.tw.bootcamp.bookshop.book;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -19,5 +22,10 @@ public class BookController {
     List<Book> list() {
         List<Book> books = bookService.fetchAll();
         return books;
+    }
+
+    @PostMapping("/books")
+    List<Book> upload(@RequestParam(name="file") MultipartFile inputBookList) {
+        return bookService.upload(inputBookList);
     }
 }
