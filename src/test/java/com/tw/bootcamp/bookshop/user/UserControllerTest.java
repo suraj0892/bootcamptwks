@@ -54,7 +54,7 @@ class UserControllerTest {
     @Test
     void shouldRespondWithErrorMessageWhenCreateUserFails() throws Exception {
         CreateUserRequest userCredentials = buildCreateUserRequest();
-        when(userService.create(userCredentials)).thenThrow(new InvalidEmailException());
+        when(userService.create(userCredentials)).thenThrow(new InvalidEmailException("User with same email already created"));
 
         mockMvc.perform(post("/users")
                 .content(objectMapper.writeValueAsString(userCredentials))

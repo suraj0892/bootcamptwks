@@ -12,8 +12,8 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -77,4 +77,17 @@ class UserServiceTest {
         when(userRepository.findByEmail(any())).thenReturn(Optional.empty());
         assertThrows(UsernameNotFoundException.class, () -> userService.loadUserByUsername(invalidEmailId));
     }
+
+    @Test
+    void shouldReturnFalseIfEmailFormatIsInvalid() {
+        String invalidEmailId = "testemail@test";
+        assertFalse(userService.validateEmailFormat(invalidEmailId));
+    }
+
+    @Test
+    void shouldReturnTrueIfEmailFormatIsValid() {
+        String validEmailId = "testemail@test.com";
+        assertTrue(userService.validateEmailFormat(validEmailId));
+    }
+
 }
