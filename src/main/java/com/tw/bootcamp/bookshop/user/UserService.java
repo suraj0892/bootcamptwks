@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.Validator;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -22,9 +24,12 @@ public class UserService implements UserDetailsService {
     }
 
     public User create(CreateUserRequest userRequest) throws InvalidEmailException {
+        if (!validateEmailFormat(userRequest.getEmail())) {
+            throw new InvalidEmailException("Email should follow the pattern abc@xyz.efg");
+        }
         Optional<User> user = userRepository.findByEmail(userRequest.getEmail());
         if (user.isPresent()) {
-            throw new InvalidEmailException();
+            throw new InvalidEmailException("Email Id Already Exists");
         }
         User newUser = User.create(userRequest);
         validator.validate(newUser);
@@ -44,5 +49,12 @@ public class UserService implements UserDetailsService {
                 user.getPassword(),
                 AuthorityUtils.createAuthorityList(user.getRole().authority())
         );
+    }
+
+    public boolean validateEmailFormat(String emailId) {
+        Pattern VALID_EMAIL_ADDRESS_REGEX =
+                Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(emailId);
+        return matcher.find();
     }
 }
