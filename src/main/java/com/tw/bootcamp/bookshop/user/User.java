@@ -26,7 +26,7 @@ public class User {
     private Long id;
     @NotBlank(message = "Email is mandatory")
     private String email;
-    @NotBlank(message = "Password is mandatory")
+    @NotBlank(message = "Password can't be empty")
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;

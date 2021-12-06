@@ -4,11 +4,15 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockMultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 class BookServiceTest {
@@ -45,6 +49,27 @@ class BookServiceTest {
 
         assertEquals(2, books.size());
         assertEquals("Animal Farm", books.get(0).getName());
+    }
+
+    @Test
+    void ShouldBeAbleToLoadBooks() throws IOException {
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        InputStream bookList = classloader.getResourceAsStream("test.csv");
+        MockMultipartFile file = new MockMultipartFile("file", bookList );
+
+        List<Book> books = bookService.upload(file);
+
+        assertEquals(50, books.size());
+        assertEquals(books.get(0).getAuthorName(), "Cassandra Clare");
+    }
+
+    @Test
+    void ShouldNotBeAbleToLoadWhenThereIsValidationError() throws IOException {
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        InputStream bookList = classloader.getResourceAsStream("error.csv");
+        MockMultipartFile file = new MockMultipartFile("file", bookList );
+
+        assertThrows(Exception.class, ()-> bookService.upload(file));
     }
 
     @Test

@@ -1,5 +1,6 @@
 version: 2.1
 
+
 workflows:
   version: 2
   build_and_test:
@@ -10,14 +11,21 @@ workflows:
           requires:
             - build
             - test
-      - deploy:
+      - deploy-dev:
           requires:
             - package
+      - prod-approval:
+          type: approval
+          requires:
+            - deploy-dev
+      - deploy-prod:
+          requires:
+            - prod-approval
 
 jobs:
   build:
     docker:
-      - image: gradle:alpine
+      - image: gradle:6.4.1-jdk8
     steps:
       - checkout
       - run: ./gradlew bootJar
@@ -28,7 +36,7 @@ jobs:
             - .gradle/
   test:
     docker:
-      - image: gradle:alpine
+      - image: gradle:6.4.1-jdk8
     steps:
       - checkout
       - run: ./gradlew test
@@ -46,15 +54,19 @@ jobs:
       - checkout
       - attach_workspace:
           at: ./
-      - run: docker build --iidfile image.txt -t registry.heroku.com/$HEROKU_APP_NAME/web:${CIRCLE_SHA1} .
+      - run: docker build --iidfile image_dev.txt -t registry.heroku.com/$HEROKU_APP_NAME_DEV/web:${CIRCLE_SHA1} .
       - run: docker login --username=_ --password=$HEROKU_TOKEN registry.heroku.com
-      - run: docker push registry.heroku.com/$HEROKU_APP_NAME/web:${CIRCLE_SHA1}
+      - run: docker push registry.heroku.com/$HEROKU_APP_NAME_DEV/web:${CIRCLE_SHA1}
+      - run: docker build --iidfile image_prod.txt -t registry.heroku.com/$HEROKU_APP_NAME_PROD/web:${CIRCLE_SHA1} .
+      - run: docker login --username=_ --password=$HEROKU_TOKEN registry.heroku.com
+      - run: docker push registry.heroku.com/$HEROKU_APP_NAME_PROD/web:${CIRCLE_SHA1}
       - persist_to_workspace:
           root: ./
           paths:
-            - image.txt
+            - image_dev.txt
+            - image_prod.txt
 
-  deploy:
+  deploy-dev:
     docker:
       - image: docker:dind
     steps:
@@ -64,6 +76,19 @@ jobs:
           at: ./
       - run: apk add --no-cache curl
       - run:
-          name: "Patch the container hosted in heroku"
+          name: "Patch the DEV container hosted in heroku"
           command: |
-            curl -X PATCH https://api.heroku.com/apps/$HEROKU_APP_NAME/formation --header "Content-Type: application/json" --header "Accept: application/vnd.heroku+json; version=3.docker-releases" --header "Authorization: Bearer ${HEROKU_TOKEN}" --data '{ "updates": [ { "type": "web", "docker_image": "'$(cat image.txt)'" } ] }'
+            curl -X PATCH https://api.heroku.com/apps/$HEROKU_APP_NAME_DEV/formation --header "Content-Type: application/json" --header "Accept: application/vnd.heroku+json; version=3.docker-releases" --header "Authorization: Bearer ${HEROKU_TOKEN}" --data '{ "updates": [ { "type": "web", "docker_image": "'$(cat image_dev.txt)'" } ] }'
+  deploy-prod:
+    docker:
+      - image: docker:dind
+    steps:
+      - setup_remote_docker:
+          version: 19.03.13
+      - attach_workspace:
+          at: ./
+      - run: apk add --no-cache curl
+      - run:
+          name: "Patch the PROD container hosted in heroku"
+          command: |
+            curl -X PATCH https://api.heroku.com/apps/$HEROKU_APP_NAME_PROD/formation --header "Content-Type: application/json" --header "Accept: application/vnd.heroku+json; version=3.docker-releases" --header "Authorization: Bearer ${HEROKU_TOKEN}" --data '{ "updates": [ { "type": "web", "docker_image": "'$(cat image_prod.txt)'" } ] }'
