@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @EqualsAndHashCode
@@ -15,7 +17,10 @@ import javax.persistence.Embeddable;
 @NoArgsConstructor
 public class Money {
     private String currency;
+
     @Column(columnDefinition = "NUMERIC")
+    @NotNull
+    @NotEmpty
     private double amount;
 
     public static Money rupees(double amount) {

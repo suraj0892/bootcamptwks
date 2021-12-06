@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Validator;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -19,6 +20,9 @@ import java.util.List;
 @Service
 public class BookService {
     private final BookRepository bookRepository;
+
+    @Autowired
+    private Validator validator;
 
     @Autowired
     public BookService(BookRepository bookRepository) {
@@ -46,7 +50,6 @@ public class BookService {
                 Book book = Book.builder().name(bookRecord.get("title"))
                         .authorName(bookRecord.get("author"))
                         .price(Money.rupees(Double.parseDouble(bookRecord.get("price")))).build();
-
                 books.add(book);
             }
             return bookRepository.saveAll(books);
