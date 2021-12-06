@@ -24,4 +24,9 @@ public class BookTestBuilder {
         bookBuilder.name(name);
         return this;
     }
+
+    public BookTestBuilder withAuthor(String name) {
+        bookBuilder.authorName(name);
+        return this;
+    }
 }

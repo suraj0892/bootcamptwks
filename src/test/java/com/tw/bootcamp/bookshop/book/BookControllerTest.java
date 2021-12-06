@@ -1,5 +1,6 @@
 package com.tw.bootcamp.bookshop.book;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tw.bootcamp.bookshop.user.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,14 +15,17 @@ import java.util.List;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(BookController.class)
 @WithMockUser
 class BookControllerTest {
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @MockBean
     private BookService bookService;
@@ -37,7 +41,7 @@ class BookControllerTest {
         when(bookService.fetchAll()).thenReturn(books);
 
         mockMvc.perform(get("/books")
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(1));
         verify(bookService, times(1)).fetchAll();
@@ -48,9 +52,25 @@ class BookControllerTest {
         when(bookService.fetchAll()).thenReturn(new ArrayList<>());
 
         mockMvc.perform(get("/books")
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(0));
         verify(bookService, times(1)).fetchAll();
+    }
+
+    @Test
+    void shouldListBooksWithMatchedTitleWhenPresent() throws Exception {
+        SearchRequest searchRequest = new SearchRequest("Wings of Fire", "");
+        List<Book> books = new ArrayList<Book>() {{
+            new BookTestBuilder().withName(searchRequest.getTitle()).build();
+        }};
+        when(bookService.search(searchRequest.getTitle(), searchRequest.getAuthor())).thenReturn(books);
+
+        mockMvc.perform(post("/search")
+                        .content(objectMapper.writeValueAsString(searchRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(objectMapper.writeValueAsString(books)));
+        verify(bookService, times(1)).search(searchRequest.getTitle(), searchRequest.getAuthor());
     }
 }
