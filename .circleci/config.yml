@@ -17,7 +17,7 @@ workflows:
 jobs:
   build:
     docker:
-      - image: gradle:alpine
+      - image: gradle:6.4.1-jdk8
     steps:
       - checkout
       - run: ./gradlew bootJar
@@ -28,7 +28,7 @@ jobs:
             - .gradle/
   test:
     docker:
-      - image: gradle:alpine
+      - image: gradle:6.4.1-jdk8
     steps:
       - checkout
       - run: ./gradlew test
