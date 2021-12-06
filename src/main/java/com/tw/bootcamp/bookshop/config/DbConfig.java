@@ -20,7 +20,7 @@ public class DbConfig {
     private Environment env;
 
     @Bean
-    @Profile("!local")
+    @Profile({"dev","prod"})
     public DataSource dataSource() throws URISyntaxException {
         URI dbUri = new URI(requireNonNull(env.getProperty("DATABASE_URL")));
         String username = dbUri.getUserInfo().split(":")[0];

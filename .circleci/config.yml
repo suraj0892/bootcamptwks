@@ -14,6 +14,9 @@ workflows:
       - deploy-dev:
           requires:
             - package
+      - deploy-prod:
+          requires:
+            - deploy-dev
 
 jobs:
   build:
