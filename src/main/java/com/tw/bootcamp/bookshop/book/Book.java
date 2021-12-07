@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -39,4 +40,21 @@ public class Book {
     @Embedded
     private Money price;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Book book = (Book) o;
+        return isbn13.equals(book.isbn13);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(isbn13);
+    }
+
+    public void update(Book oldBook) {
+        this.id = oldBook.id;
+        this.quantity = oldBook.quantity + this.quantity;
+    }
 }

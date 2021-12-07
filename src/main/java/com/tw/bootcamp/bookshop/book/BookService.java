@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BookService {
@@ -44,10 +45,29 @@ public class BookService {
                      CSVFormat.Builder.create(CSVFormat.DEFAULT).setHeader()
                              .setIgnoreHeaderCase(true).setSkipHeaderRecord(true).setTrim(true).build());) {
 
-            List<Book> books = convertInputCsvRecordToListOfBook(csvParser.getRecords());
+            List<Book> newBooks = convertInputCsvRecordToListOfBook(csvParser.getRecords());
 
-            return bookRepository.saveAll(books);
+            updateBookForMatchingIsbn(newBooks);
+
+            return bookRepository.saveAll(newBooks);
         }
+    }
+
+    private void updateBookForMatchingIsbn(List<Book> newBooks) {
+        List<Long> newBooksIsbn = newBooks.stream().map(Book::getIsbn13).collect(Collectors.toList());
+        List<Book> oldBooksMatchingIsbn = bookRepository.findAllByIsbn(newBooksIsbn);
+        for(Book newBook: newBooks){
+            if(oldBooksMatchingIsbn.contains(newBook)){
+                Book oldBook = getMatchingBook(oldBooksMatchingIsbn, newBook);
+                newBook.update(oldBook);
+            }
+        }
+    }
+
+    private Book getMatchingBook(List<Book> oldBooksMatchingIsbn, Book newBook) {
+        return oldBooksMatchingIsbn.stream()
+                .filter(book1 -> book1.equals(newBook))
+                .findFirst().get();
     }
 
     public List<Book> search(String title, String author) throws InvalidRequestParameterException {

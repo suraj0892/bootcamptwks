@@ -73,6 +73,21 @@ class BookServiceTest {
     }
 
     @Test
+    void shouldBeAbleToUploadBookwithMatchingIsbn() throws InvalidFileFormatException, IOException {
+
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        InputStream bookList = classloader.getResourceAsStream("test.csv");
+        MockMultipartFile file = new MockMultipartFile("file", "test.csv","text/csv",bookList );
+
+        List<Book> books = bookService.upload(file);
+        assertEquals(1, books.size());
+        books = bookService.upload(file);
+        assertEquals(1, books.size());
+        assertEquals(20, books.get(0).getQuantity());
+
+    }
+
+    @Test
     void ShouldNotBeAbleToLoadWhenInputFileIsNotCsv() throws IOException, InvalidFileFormatException {
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         InputStream bookList = classloader.getResourceAsStream("error.txt");
