@@ -58,7 +58,7 @@ class BookServiceTest {
     @Nested
     public class loadBooks {
         @Test
-        void ShouldBeAbleToLoadBooks() throws IOException, InvalidFileFormatException {
+        void ShouldBeAbleToLoadBooksWithNoMatchingIsbn() throws IOException, InvalidFileFormatException {
             ClassLoader classloader = Thread.currentThread()
                     .getContextClassLoader();
             InputStream bookList = classloader.getResourceAsStream("test.csv");
@@ -115,7 +115,8 @@ class BookServiceTest {
                     .getContextClassLoader();
             InputStream bookList = classloader.getResourceAsStream("test.csv");
             MockMultipartFile file = new MockMultipartFile("file", "test.csv", "text/csv", bookList);
-            MockMultipartFile bookNameUpdated = new MockMultipartFile("file", "bookNameUpdated.csv", "text/csv", classloader.getResourceAsStream("bookNameUpdated.csv"));
+            MockMultipartFile bookNameUpdated = new MockMultipartFile("file", "bookNameUpdated.csv", "text/csv",
+                    classloader.getResourceAsStream("bookNameUpdated.csv"));
 
             List<Book> books = bookService.upload(file);
             List<Book> updatedBook = bookService.upload(bookNameUpdated);

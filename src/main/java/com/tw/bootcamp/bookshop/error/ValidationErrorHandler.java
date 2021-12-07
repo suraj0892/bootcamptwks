@@ -29,7 +29,7 @@ public class ValidationErrorHandler {
     public ResponseEntity<ErrorResponse> handleNumberFormatException(
             NumberFormatException ex) {
         ErrorResponse apiError =
-                new ErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+                new ErrorResponse(HttpStatus.BAD_REQUEST, "One or More Mandatory Fields are Missing");
         return new ResponseEntity<>(apiError, apiError.getStatus());
     }
 }
