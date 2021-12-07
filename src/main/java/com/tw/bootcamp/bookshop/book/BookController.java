@@ -35,7 +35,7 @@ public class BookController {
 
     @Operation(summary = "Search books", description = "Search books from book shop", tags = { "Book Service" })
     @PostMapping("/search")
-    List<Book> search(@RequestBody SearchRequest searchRequest) throws InvalidRequestParameterException {
+    List<Book> search(@RequestBody SearchRequest searchRequest) throws InvalidRequestParameterException, NoBooksFoundException {
         return bookService.search(searchRequest.getTitle(), searchRequest.getAuthor());
     }
 }

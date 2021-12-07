@@ -24,9 +24,6 @@ public class BookService {
     private final BookRepository bookRepository;
 
     @Autowired
-    private Validator validator;
-
-    @Autowired
     public BookService(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }
@@ -43,7 +40,7 @@ public class BookService {
         try (BufferedReader fileReader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
              CSVParser csvParser = new CSVParser(fileReader,
                      CSVFormat.Builder.create(CSVFormat.DEFAULT).setHeader()
-                             .setIgnoreHeaderCase(true).setSkipHeaderRecord(true).setTrim(true).build());) {
+                             .setIgnoreHeaderCase(true).setSkipHeaderRecord(true).setTrim(true).build())) {
 
             List<Book> newBooks = convertInputCsvRecordToListOfBook(csvParser.getRecords());
 
@@ -70,27 +67,29 @@ public class BookService {
                 .findFirst().get();
     }
 
-    public List<Book> search(String title, String author) throws InvalidRequestParameterException {
+    public List<Book> search(String title, String author) throws InvalidRequestParameterException, NoBooksFoundException {
         if (StringUtils.isBlank(title) && StringUtils.isBlank(author)) {
             throw new InvalidRequestParameterException("Book title and author should not be empty!");
         }
 
-        return bookRepository.
+        List<Book> foundBooks = bookRepository.
                 findByNameStartingWithIgnoreCaseAndAuthorNameStartingWithIgnoreCase(
                         Optional.ofNullable(title).orElse(""),
                         Optional.ofNullable(author).orElse(""));
+        if(foundBooks.size() <=0){
+            throw new NoBooksFoundException("No Match Found!");
+        }
+        return foundBooks;
     }
 
     private List<Book> convertInputCsvRecordToListOfBook(List<CSVRecord> bookRecords){
         List<Book> books = new ArrayList<>();
-        bookRecords.stream().forEach(bookRecord -> {
-            books.add(Book.builder()
-                    .name(bookRecord.get("title"))
-                    .authorName(bookRecord.get("author"))
-                    .isbn13(Long.parseLong(bookRecord.get("isbn13")))
-                    .quantity(Integer.parseInt(bookRecord.get("books_count")))
-                    .price(Money.rupees(Double.parseDouble(bookRecord.get("price")))).build());
-        });
+        bookRecords.forEach(bookRecord -> books.add(Book.builder()
+                .name(bookRecord.get("title"))
+                .authorName(bookRecord.get("author"))
+                .isbn13(Long.parseLong(bookRecord.get("isbn13")))
+                .quantity(Integer.parseInt(bookRecord.get("books_count")))
+                .price(Money.rupees(Double.parseDouble(bookRecord.get("price")))).build()));
         return books;
     }
 }

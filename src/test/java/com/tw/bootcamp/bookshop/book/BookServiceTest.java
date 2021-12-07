@@ -138,7 +138,7 @@ class BookServiceTest {
     @Nested
     public class search {
         @Test
-        void shouldListBooksWhenTitleMatches() throws InvalidRequestParameterException {
+        void shouldListBooksWhenTitleMatches() throws InvalidRequestParameterException, NoBooksFoundException {
             Book wingsOfFire = new BookTestBuilder().withName("Wings of Fire")
                     .withAuthor("Author")
                     .build();
@@ -156,7 +156,7 @@ class BookServiceTest {
         }
 
         @Test
-        void shouldNotListBooksWhenTitleDoesNotMatches() throws InvalidRequestParameterException {
+        void shouldNotListBooksWhenTitleDoesNotMatches() throws InvalidRequestParameterException, NoBooksFoundException {
             Book wingsOfFire = new BookTestBuilder().withName("Wings of Fire")
                     .withAuthor("Author")
                     .build();
@@ -166,13 +166,11 @@ class BookServiceTest {
             bookRepository.save(wingsOfFire);
             bookRepository.save(animalFarm);
 
-            List<Book> books = bookService.search("Harry Potter", "");
-
-            assertEquals(0, books.size());
+            assertThrows(NoBooksFoundException.class, () -> bookService.search("Harry Potter", ""));
         }
 
         @Test
-        void shouldListBooksWhenAuthorMatches() throws InvalidRequestParameterException {
+        void shouldListBooksWhenAuthorMatches() throws InvalidRequestParameterException, NoBooksFoundException {
             Book wingsOfFire = new BookTestBuilder().withAuthor("Wings of Fire")
                     .withName("Title")
                     .build();
@@ -190,7 +188,7 @@ class BookServiceTest {
         }
 
         @Test
-        void shouldNotListBooksWhenAuthorDoesNotMatches() throws InvalidRequestParameterException {
+        void shouldNotListBooksWhenAuthorDoesNotMatches() throws InvalidRequestParameterException, NoBooksFoundException {
             Book wingsOfFire = new BookTestBuilder().withAuthor("Wings of Fire")
                     .withName("Title")
                     .build();
@@ -200,13 +198,11 @@ class BookServiceTest {
             bookRepository.save(wingsOfFire);
             bookRepository.save(animalFarm);
 
-            List<Book> books = bookService.search("", "Harry Potter");
-
-            assertEquals(0, books.size());
+            assertThrows(NoBooksFoundException.class, () -> bookService.search("", "Harry Potter"));
         }
 
         @Test
-        void shouldListBooksWhenAuthorAndTitleMatches() throws InvalidRequestParameterException {
+        void shouldListBooksWhenAuthorAndTitleMatches() throws InvalidRequestParameterException, NoBooksFoundException {
             Book wingsOfFire = new BookTestBuilder().withName("Wings of Fire")
                     .withAuthor("Saugata")
                     .build();
@@ -236,7 +232,7 @@ class BookServiceTest {
         }
 
         @Test
-        void shouldNotListBooksWhenAuthorAndTitleDoesNotMatches() throws InvalidRequestParameterException {
+        void shouldNotListBooksWhenAuthorAndTitleDoesNotMatches() throws InvalidRequestParameterException, NoBooksFoundException {
             Book wingsOfFire = new BookTestBuilder().withName("Wings of Fire")
                     .withAuthor("Saugata")
                     .build();
@@ -254,9 +250,7 @@ class BookServiceTest {
             bookRepository.save(wingsOfFireII);
             bookRepository.save(animalFarmII);
 
-            List<Book> books = bookService.search("Extreme Programming", "Kent Beck");
-
-            assertEquals(0, books.size());
+            assertThrows(NoBooksFoundException.class, () -> bookService.search("Extreme Programming", "Kent Beck"));
         }
 
         @Test
@@ -265,7 +259,7 @@ class BookServiceTest {
         }
 
         @Test
-        void shouldListBooksWhenAuthorAndTitleMatchesIgnoringCase() throws InvalidRequestParameterException {
+        void shouldListBooksWhenAuthorAndTitleMatchesIgnoringCase() throws InvalidRequestParameterException, NoBooksFoundException {
             Book wingsOfFire = new BookTestBuilder().withName("Wings of Fire").withAuthor("Saugata").build();
             Book animalFarm = new BookTestBuilder().withName("Animal Farm").withAuthor("Ankit").build();
             Book wingsOfFireII = new BookTestBuilder().withName("Wings of Fire II").withAuthor("SaugataB").build();

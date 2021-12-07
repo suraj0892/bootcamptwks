@@ -80,7 +80,7 @@ class BookControllerTest {
     }
 
     @Test
-    void shouldListBooksWithMatchedTitleWhenPresent() throws InvalidRequestParameterException, Exception {
+    void shouldListBooksWithMatchedTitleWhenPresent() throws InvalidRequestParameterException, Exception, NoBooksFoundException {
         SearchRequest searchRequest = new SearchRequest("Wings of Fire", "");
         List<Book> books = new ArrayList<Book>() {{
             new BookTestBuilder().withName(searchRequest.getTitle()).build();
