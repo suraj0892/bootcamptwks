@@ -68,7 +68,7 @@ public class BookService {
             books.add(Book.builder()
                     .name(bookRecord.get("title"))
                     .authorName(bookRecord.get("author"))
-                    .isbn(Long.parseLong(bookRecord.get("isbn13")))
+                    .isbn13(Long.parseLong(bookRecord.get("isbn13")))
                     .quantity(Integer.parseInt(bookRecord.get("books_count")))
                     .price(Money.rupees(Double.parseDouble(bookRecord.get("price")))).build());
         });

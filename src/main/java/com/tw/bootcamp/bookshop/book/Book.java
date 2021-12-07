@@ -34,7 +34,7 @@ public class Book {
 
     private Integer quantity;
 
-    private Long isbn;
+    private Long isbn13;
 
     @Embedded
     private Money price;
