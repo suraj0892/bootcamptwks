@@ -56,7 +56,7 @@ class BookServiceTest {
     }
 
     @Nested
-    public class loadBooks {
+    public class load {
         @Test
         void ShouldBeAbleToLoadBooksWithNoMatchingIsbn() throws IOException, InvalidFileFormatException {
             ClassLoader classloader = Thread.currentThread()
@@ -135,130 +135,155 @@ class BookServiceTest {
         }
     }
 
-    @Test
-    void shouldListBooksWhenTitleMatches() throws InvalidRequestParameterException {
-        Book wingsOfFire = new BookTestBuilder().withName("Wings of Fire")
-                .withAuthor("Author")
-                .build();
-        Book animalFarm = new BookTestBuilder().withName("Animal Farm")
-                .withAuthor("Author")
-                .build();
-        bookRepository.save(wingsOfFire);
-        bookRepository.save(animalFarm);
+    @Nested
+    public class search {
+        @Test
+        void shouldListBooksWhenTitleMatches() throws InvalidRequestParameterException {
+            Book wingsOfFire = new BookTestBuilder().withName("Wings of Fire")
+                    .withAuthor("Author")
+                    .build();
+            Book animalFarm = new BookTestBuilder().withName("Animal Farm")
+                    .withAuthor("Author")
+                    .build();
+            bookRepository.save(wingsOfFire);
+            bookRepository.save(animalFarm);
 
-        List<Book> books = bookService.search(wingsOfFire.getName(), "");
+            List<Book> books = bookService.search(wingsOfFire.getName(), "");
 
-        assertEquals(1, books.size());
-        assertEquals(wingsOfFire.getName(), books.get(0)
-                .getName());
-    }
+            assertEquals(1, books.size());
+            assertEquals(wingsOfFire.getName(), books.get(0)
+                    .getName());
+        }
 
-    @Test
-    void shouldNotListBooksWhenTitleDoesNotMatches() throws InvalidRequestParameterException {
-        Book wingsOfFire = new BookTestBuilder().withName("Wings of Fire")
-                .withAuthor("Author")
-                .build();
-        Book animalFarm = new BookTestBuilder().withName("Animal Farm")
-                .withAuthor("Author")
-                .build();
-        bookRepository.save(wingsOfFire);
-        bookRepository.save(animalFarm);
+        @Test
+        void shouldNotListBooksWhenTitleDoesNotMatches() throws InvalidRequestParameterException {
+            Book wingsOfFire = new BookTestBuilder().withName("Wings of Fire")
+                    .withAuthor("Author")
+                    .build();
+            Book animalFarm = new BookTestBuilder().withName("Animal Farm")
+                    .withAuthor("Author")
+                    .build();
+            bookRepository.save(wingsOfFire);
+            bookRepository.save(animalFarm);
 
-        List<Book> books = bookService.search("Harry Potter", "");
+            List<Book> books = bookService.search("Harry Potter", "");
 
-        assertEquals(0, books.size());
-    }
+            assertEquals(0, books.size());
+        }
 
-    @Test
-    void shouldListBooksWhenAuthorMatches() throws InvalidRequestParameterException {
-        Book wingsOfFire = new BookTestBuilder().withAuthor("Wings of Fire")
-                .withName("Title")
-                .build();
-        Book animalFarm = new BookTestBuilder().withAuthor("Animal Farm")
-                .withName("Title")
-                .build();
-        bookRepository.save(wingsOfFire);
-        bookRepository.save(animalFarm);
+        @Test
+        void shouldListBooksWhenAuthorMatches() throws InvalidRequestParameterException {
+            Book wingsOfFire = new BookTestBuilder().withAuthor("Wings of Fire")
+                    .withName("Title")
+                    .build();
+            Book animalFarm = new BookTestBuilder().withAuthor("Animal Farm")
+                    .withName("Title")
+                    .build();
+            bookRepository.save(wingsOfFire);
+            bookRepository.save(animalFarm);
 
-        List<Book> books = bookService.search("", wingsOfFire.getAuthorName());
+            List<Book> books = bookService.search("", wingsOfFire.getAuthorName());
 
-        assertEquals(1, books.size());
-        assertEquals(wingsOfFire.getAuthorName(), books.get(0)
-                .getAuthorName());
-    }
+            assertEquals(1, books.size());
+            assertEquals(wingsOfFire.getAuthorName(), books.get(0)
+                    .getAuthorName());
+        }
 
-    @Test
-    void shouldNotListBooksWhenAuthorDoesNotMatches() throws InvalidRequestParameterException {
-        Book wingsOfFire = new BookTestBuilder().withAuthor("Wings of Fire")
-                .withName("Title")
-                .build();
-        Book animalFarm = new BookTestBuilder().withAuthor("Animal Farm")
-                .withName("Title")
-                .build();
-        bookRepository.save(wingsOfFire);
-        bookRepository.save(animalFarm);
+        @Test
+        void shouldNotListBooksWhenAuthorDoesNotMatches() throws InvalidRequestParameterException {
+            Book wingsOfFire = new BookTestBuilder().withAuthor("Wings of Fire")
+                    .withName("Title")
+                    .build();
+            Book animalFarm = new BookTestBuilder().withAuthor("Animal Farm")
+                    .withName("Title")
+                    .build();
+            bookRepository.save(wingsOfFire);
+            bookRepository.save(animalFarm);
 
-        List<Book> books = bookService.search("", "Harry Potter");
+            List<Book> books = bookService.search("", "Harry Potter");
 
-        assertEquals(0, books.size());
-    }
+            assertEquals(0, books.size());
+        }
 
-    @Test
-    void shouldListBooksWhenAuthorAndTitleMatches() throws InvalidRequestParameterException {
-        Book wingsOfFire = new BookTestBuilder().withName("Wings of Fire")
-                .withAuthor("Saugata")
-                .build();
-        Book animalFarm = new BookTestBuilder().withName("Animal Farm")
-                .withAuthor("Ankit")
-                .build();
-        Book wingsOfFireII = new BookTestBuilder().withName("Wings of Fire II")
-                .withAuthor("SaugataB")
-                .build();
-        Book animalFarmII = new BookTestBuilder().withName("Animal Farm II")
-                .withAuthor("AnkitJ")
-                .build();
-        bookRepository.save(wingsOfFire);
-        bookRepository.save(animalFarm);
-        bookRepository.save(wingsOfFireII);
-        bookRepository.save(animalFarmII);
+        @Test
+        void shouldListBooksWhenAuthorAndTitleMatches() throws InvalidRequestParameterException {
+            Book wingsOfFire = new BookTestBuilder().withName("Wings of Fire")
+                    .withAuthor("Saugata")
+                    .build();
+            Book animalFarm = new BookTestBuilder().withName("Animal Farm")
+                    .withAuthor("Ankit")
+                    .build();
+            Book wingsOfFireII = new BookTestBuilder().withName("Wings of Fire II")
+                    .withAuthor("SaugataB")
+                    .build();
+            Book animalFarmII = new BookTestBuilder().withName("Animal Farm II")
+                    .withAuthor("AnkitJ")
+                    .build();
+            bookRepository.save(wingsOfFire);
+            bookRepository.save(animalFarm);
+            bookRepository.save(wingsOfFireII);
+            bookRepository.save(animalFarmII);
 
-        List<Book> books = bookService.search("Animal Farm", "Ankit");
+            List<Book> books = bookService.search("Animal Farm", "Ankit");
 
-        assertEquals(2, books.size());
-        assertTrue(books.stream()
-                .allMatch(book -> book.getAuthorName()
-                        .startsWith("Ankit")));
-        assertTrue(books.stream()
-                .allMatch(book -> book.getName()
-                        .startsWith("Animal Farm")));
-    }
+            assertEquals(2, books.size());
+            assertTrue(books.stream()
+                    .allMatch(book -> book.getAuthorName()
+                            .startsWith("Ankit")));
+            assertTrue(books.stream()
+                    .allMatch(book -> book.getName()
+                            .startsWith("Animal Farm")));
+        }
 
-    @Test
-    void shouldListBooksWhenAuthorAndTitleDoesNotMatches() throws InvalidRequestParameterException {
-        Book wingsOfFire = new BookTestBuilder().withName("Wings of Fire")
-                .withAuthor("Saugata")
-                .build();
-        Book animalFarm = new BookTestBuilder().withName("Animal Farm")
-                .withAuthor("Ankit")
-                .build();
-        Book wingsOfFireII = new BookTestBuilder().withName("Wings of Fire II")
-                .withAuthor("SaugataB")
-                .build();
-        Book animalFarmII = new BookTestBuilder().withName("Animal Farm II")
-                .withAuthor("AnkitJ")
-                .build();
-        bookRepository.save(wingsOfFire);
-        bookRepository.save(animalFarm);
-        bookRepository.save(wingsOfFireII);
-        bookRepository.save(animalFarmII);
+        @Test
+        void shouldNotListBooksWhenAuthorAndTitleDoesNotMatches() throws InvalidRequestParameterException {
+            Book wingsOfFire = new BookTestBuilder().withName("Wings of Fire")
+                    .withAuthor("Saugata")
+                    .build();
+            Book animalFarm = new BookTestBuilder().withName("Animal Farm")
+                    .withAuthor("Ankit")
+                    .build();
+            Book wingsOfFireII = new BookTestBuilder().withName("Wings of Fire II")
+                    .withAuthor("SaugataB")
+                    .build();
+            Book animalFarmII = new BookTestBuilder().withName("Animal Farm II")
+                    .withAuthor("AnkitJ")
+                    .build();
+            bookRepository.save(wingsOfFire);
+            bookRepository.save(animalFarm);
+            bookRepository.save(wingsOfFireII);
+            bookRepository.save(animalFarmII);
 
-        List<Book> books = bookService.search("Extreme Programming", "Kent Beck");
+            List<Book> books = bookService.search("Extreme Programming", "Kent Beck");
 
-        assertEquals(0, books.size());
-    }
+            assertEquals(0, books.size());
+        }
 
-    @Test
-    void shouldThrowExceptionWhenTitleAndAuthorAreNullOrEmpty() {
-        assertThrows(InvalidRequestParameterException.class, () -> bookService.search("", ""));
+        @Test
+        void shouldThrowExceptionWhenTitleAndAuthorAreNullOrEmpty() {
+            assertThrows(InvalidRequestParameterException.class, () -> bookService.search("", ""));
+        }
+
+        @Test
+        void shouldListBooksWhenAuthorAndTitleMatchesIgnoringCase() throws InvalidRequestParameterException {
+            Book wingsOfFire = new BookTestBuilder().withName("Wings of Fire").withAuthor("Saugata").build();
+            Book animalFarm = new BookTestBuilder().withName("Animal Farm").withAuthor("Ankit").build();
+            Book wingsOfFireII = new BookTestBuilder().withName("Wings of Fire II").withAuthor("SaugataB").build();
+            Book animalFarmII = new BookTestBuilder().withName("Animal Farm II").withAuthor("AnkitJ").build();
+            bookRepository.save(wingsOfFire);
+            bookRepository.save(animalFarm);
+            bookRepository.save(wingsOfFireII);
+            bookRepository.save(animalFarmII);
+
+            List<Book> books = bookService.search("animal farm", "ANKIT");
+
+            assertEquals(2, books.size());
+            assertTrue(books.stream()
+                    .allMatch(book -> book.getAuthorName()
+                            .startsWith("Ankit")));
+            assertTrue(books.stream()
+                    .allMatch(book -> book.getName()
+                            .startsWith("Animal Farm")));
+        }
     }
 }

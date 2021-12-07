@@ -74,7 +74,7 @@ public class BookService {
             throw new InvalidRequestParameterException("Book title and author should not be empty!");
         }
 
-        return bookRepository.findByNameStartingWithAndAuthorNameStartingWith(title, author);
+        return bookRepository.findByNameStartingWithIgnoreCaseAndAuthorNameStartingWithIgnoreCase(title, author);
     }
 
     private List<Book> convertInputCsvRecordToListOfBook(List<CSVRecord> bookRecords){

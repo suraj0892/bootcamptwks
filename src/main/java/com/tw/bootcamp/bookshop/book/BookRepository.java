@@ -11,7 +11,7 @@ import java.util.List;
 public interface BookRepository extends JpaRepository<Book, Long>  {
     List<Book> findAllByOrderByNameAsc();
 
-    List<Book> findByNameStartingWithAndAuthorNameStartingWith(String title, String author);
+    List<Book> findByNameStartingWithIgnoreCaseAndAuthorNameStartingWithIgnoreCase(String title, String author);
 
     @Query("Select b from Book b where b.isbn13 in (:isbns)")
     List<Book> findAllByIsbn(@Param("isbns") List<Long> newBooksIsbn);
