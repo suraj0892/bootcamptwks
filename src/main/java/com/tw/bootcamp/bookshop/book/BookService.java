@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -70,5 +69,4 @@ public class BookService {
         });
         return books;
     }
-
 }
