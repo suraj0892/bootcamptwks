@@ -30,7 +30,7 @@ jobs:
       - checkout
       - run: ./gradlew bootJar
       - run:
-          name: Notify the test failure
+          name: Notify the build failure
           when: on_fail
           command: >
             curl --header "Content-Type: application/json"
@@ -38,7 +38,7 @@ jobs:
             --data "{\"cards\":[{\"header\":{\"title\":\"Oops. Dev build ${CIRCLE_BUILD_NUM} is failed.\",\"subtitle\":\"${CIRCLE_PROJECT_REPONAME}\",\"imageUrl\":\"https://png.pngtree.com/svg/20170406/icon_failed__1325447.png\",\"imageStyle\":\"IMAGE\"},\"sections\":[{\"widgets\":[{\"keyValue\":{\"topLabel\":\"${CIRCLE_TAG}\",\"content\":\"${CIRCLE_SHA1}\"}}]},{\"widgets\":[{\"buttons\":[{\"textButton\":{\"text\":\"DETAILS\",\"onClick\":{\"openLink\":{\"url\":\"${CIRCLE_BUILD_URL}\"}}}}]}]}]}]}"
             $CHAT_WEBHOOK_URL
       - run:
-          name: Notify the test success
+          name: Notify the build success
           when: on_success
           command: >
             curl --header "Content-Type: application/json"
@@ -57,6 +57,22 @@ jobs:
     steps:
       - checkout
       - run: ./gradlew test
+      - run:
+          name: Notify the test failure
+          when: on_fail
+          command: >
+            curl --header "Content-Type: application/json"
+            --request POST
+            --data "{\"cards\":[{\"header\":{\"title\":\"Oops. Tests ${CIRCLE_BUILD_NUM} are failed.\",\"subtitle\":\"${CIRCLE_PROJECT_REPONAME}\",\"imageUrl\":\"https://png.pngtree.com/svg/20170406/icon_failed__1325447.png\",\"imageStyle\":\"IMAGE\"},\"sections\":[{\"widgets\":[{\"keyValue\":{\"topLabel\":\"${CIRCLE_TAG}\",\"content\":\"${CIRCLE_SHA1}\"}}]},{\"widgets\":[{\"buttons\":[{\"textButton\":{\"text\":\"DETAILS\",\"onClick\":{\"openLink\":{\"url\":\"${CIRCLE_BUILD_URL}\"}}}}]}]}]}]}"
+            $CHAT_WEBHOOK_URL
+      - run:
+          name: Notify the test success
+          when: on_success
+          command: >
+            curl --header "Content-Type: application/json"
+            --request POST
+            --data "{\"cards\":[{\"header\":{\"title\":\"Tests ${CIRCLE_BUILD_NUM} are passed.\",\"subtitle\":\"${CIRCLE_PROJECT_REPONAME}\",\"imageUrl\":\"https://png.pngtree.com/svg/20170510/success_404253.png\",\"imageStyle\":\"IMAGE\"},\"sections\":[{\"widgets\":[{\"keyValue\":{\"topLabel\":\"${CIRCLE_TAG}\",\"content\":\"${CIRCLE_SHA1}\"}}]},{\"widgets\":[{\"buttons\":[{\"textButton\":{\"text\":\"DETAILS\",\"onClick\":{\"openLink\":{\"url\":\"${CIRCLE_BUILD_URL}\"}}}}]}]}]}]}"
+            $CHAT_WEBHOOK_URL
       - store_test_results:
           path: build/test-results
       - store_artifacts:
