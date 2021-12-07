@@ -69,7 +69,7 @@ public class BookService {
 
     public List<Book> search(String title, String author) throws InvalidRequestParameterException, NoBooksFoundException {
         if (StringUtils.isBlank(title) && StringUtils.isBlank(author)) {
-            throw new InvalidRequestParameterException("Book title and author should not be empty!");
+            throw new InvalidRequestParameterException("Book title or author should be provided");
         }
 
         List<Book> foundBooks = bookRepository.
