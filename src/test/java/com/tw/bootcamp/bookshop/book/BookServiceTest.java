@@ -109,10 +109,8 @@ class BookServiceTest {
             MockMultipartFile bookNameUpdated = new MockMultipartFile("file", "bookNameUpdated.csv", "text/csv", classloader.getResourceAsStream("bookNameUpdated.csv"));
 
             List<Book> books = bookService.upload(file);
-            assertEquals(1, books.size());
-            books = bookService.upload(bookNameUpdated);
-            assertEquals(1, books.size());
-            assertEquals("Updated City of Bones", books.get(0).getName());
+            List<Book> updatedBook = bookService.upload(bookNameUpdated);
+            assertEquals("Updated City of Bones", updatedBook.get(0).getName());
 
         }
 
