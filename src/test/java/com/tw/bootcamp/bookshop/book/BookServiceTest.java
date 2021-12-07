@@ -82,6 +82,16 @@ class BookServiceTest {
         }
 
         @Test
+        void ShouldNotBeAbleToLoadWhenThereIsMissingBookCount() throws IOException {
+            ClassLoader classloader = Thread.currentThread()
+                    .getContextClassLoader();
+            InputStream bookList = classloader.getResourceAsStream("errorWithMissingBookCount.csv");
+            MockMultipartFile file = new MockMultipartFile("file", "errorWithMissingBookCount.csv", "text/csv", bookList);
+
+            assertThrows(NumberFormatException.class, () -> bookService.upload(file));
+        }
+
+        @Test
         void shouldBeAbleToUploadBookwithMatchingIsbn() throws InvalidFileFormatException, IOException {
 
             ClassLoader classloader = Thread.currentThread()
