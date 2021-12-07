@@ -9,7 +9,6 @@ class BookshopApplicationTests {
 
 	@Test
 	void contextLoads() {
-		Assertions.fail("Fail the test case");
 	}
 
 }
