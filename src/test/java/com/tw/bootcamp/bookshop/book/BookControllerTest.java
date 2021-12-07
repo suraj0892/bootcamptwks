@@ -87,5 +87,4 @@ class BookControllerTest {
                 .andExpect(content().string(objectMapper.writeValueAsString(books)));
         verify(bookService, times(1)).search(searchRequest.getTitle(), searchRequest.getAuthor());
     }
-
 }

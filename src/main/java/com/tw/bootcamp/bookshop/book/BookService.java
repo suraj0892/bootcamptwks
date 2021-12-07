@@ -57,20 +57,6 @@ public class BookService {
     }
 
     public List<Book> search(String title, String author) {
-
-        if (StringUtils.isNotBlank(title) && StringUtils.isNotBlank(author)) {
-            return bookRepository.findByNameAndAuthorNameStartingWith(title, author);
-        }
-        else if (StringUtils.isNotBlank(title)) {
-            return bookRepository.findByNameStartingWith(title);
-        }
-        else if (StringUtils.isNotBlank(author)) {
-            return bookRepository.findByAuthorNameStartingWith(author);
-        }
-        else {
-            return new ArrayList<>();
-        }
+        return bookRepository.findByNameStartingWithAndAuthorNameStartingWith(title, author);
     }
-
-
 }
