@@ -36,9 +36,7 @@ dependencies {
 	}
 	testImplementation 'org.springframework.security:spring-security-test'
 	implementation 'org.springdoc:springdoc-openapi-ui:1.5.11'
-
-	compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.7.0'
-	compile group:  'io.springfox', name: 'springfox-swagger-ui', version: '2.7.0'
+	implementation 'org.springdoc:springdoc-openapi-ui:1.5.11'
 }
 
 test {
