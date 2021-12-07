@@ -36,22 +36,12 @@ public class BookService {
     public List<Book> upload(@RequestParam("file") MultipartFile file) throws IOException {
 
         try (BufferedReader fileReader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
-
              CSVParser csvParser = new CSVParser(fileReader,
-                     CSVFormat.DEFAULT.withFirstRecordAsHeader()
-                             .withIgnoreHeaderCase()
-                             .withTrim());) {
+                     CSVFormat.Builder.create(CSVFormat.DEFAULT).setHeader()
+                             .setIgnoreHeaderCase(true).setSkipHeaderRecord(true).setTrim(true).build());) {
 
-            List<Book> books = new ArrayList<Book>();
+            List<Book> books = convertInputCsvRecordToListOfBook(csvParser.getRecords());
 
-            Iterable<CSVRecord> bookRecords = csvParser.getRecords();
-
-            for (CSVRecord bookRecord : bookRecords) {
-                Book book = Book.builder().name(bookRecord.get("title"))
-                        .authorName(bookRecord.get("author"))
-                        .price(Money.rupees(Double.parseDouble(bookRecord.get("price")))).build();
-                books.add(book);
-            }
             return bookRepository.saveAll(books);
         }
     }
@@ -59,4 +49,18 @@ public class BookService {
     public List<Book> search(String title, String author) {
         return bookRepository.findByNameStartingWithAndAuthorNameStartingWith(title, author);
     }
+
+    private List<Book> convertInputCsvRecordToListOfBook(List<CSVRecord> bookRecords){
+        List<Book> books = new ArrayList<>();
+        bookRecords.stream().forEach(bookRecord -> {
+            books.add(Book.builder()
+                    .name(bookRecord.get("title"))
+                    .authorName(bookRecord.get("author"))
+                    .isbn13(Long.parseLong(bookRecord.get("isbn13")))
+                    .quantity(Integer.parseInt(bookRecord.get("books_count")))
+                    .price(Money.rupees(Double.parseDouble(bookRecord.get("price")))).build());
+        });
+        return books;
+    }
+
 }

@@ -23,12 +23,18 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @NotNull
     @NotEmpty
     private String name;
+
     @NotNull
     @NotEmpty
     private String authorName;
+
+    private Integer quantity;
+
+    private Long isbn13;
 
     @Embedded
     private Money price;
