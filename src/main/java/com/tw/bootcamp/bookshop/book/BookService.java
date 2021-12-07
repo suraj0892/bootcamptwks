@@ -33,7 +33,10 @@ public class BookService {
         return bookRepository.findAllByOrderByNameAsc();
     }
 
-    public List<Book> upload(@RequestParam("file") MultipartFile file) throws IOException {
+    public List<Book> upload(@RequestParam("file") MultipartFile file) throws IOException, InvalidFileFormatException {
+
+        if(!file.getContentType().equalsIgnoreCase("text/csv"))
+            throw new InvalidFileFormatException("Only Valid csv files are allowed");
 
         try (BufferedReader fileReader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
              CSVParser csvParser = new CSVParser(fileReader,

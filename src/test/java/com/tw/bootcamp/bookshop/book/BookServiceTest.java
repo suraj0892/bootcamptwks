@@ -2,6 +2,7 @@ package com.tw.bootcamp.bookshop.book;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.Nested;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
@@ -10,9 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class BookServiceTest {
@@ -51,15 +50,16 @@ class BookServiceTest {
         assertEquals("Animal Farm", books.get(0).getName());
     }
 
+
     @Test
-    void ShouldBeAbleToLoadBooks() throws IOException {
+    void ShouldBeAbleToLoadBooks() throws IOException, InvalidFileFormatException {
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         InputStream bookList = classloader.getResourceAsStream("test.csv");
-        MockMultipartFile file = new MockMultipartFile("file", bookList );
+        MockMultipartFile file = new MockMultipartFile("file", "test.csv","text/csv",bookList );
 
         List<Book> books = bookService.upload(file);
 
-        assertEquals(50, books.size());
+        assertEquals(1, books.size());
         assertEquals(books.get(0).getAuthorName(), "Cassandra Clare");
     }
 
@@ -67,9 +67,18 @@ class BookServiceTest {
     void ShouldNotBeAbleToLoadWhenThereIsValidationError() throws IOException {
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         InputStream bookList = classloader.getResourceAsStream("error.csv");
-        MockMultipartFile file = new MockMultipartFile("file", bookList );
+        MockMultipartFile file = new MockMultipartFile("file", "error.csv","text/csv",bookList );
 
         assertThrows(Exception.class, ()-> bookService.upload(file));
+    }
+
+    @Test
+    void ShouldNotBeAbleToLoadWhenInputFileIsNotCsv() throws IOException, InvalidFileFormatException {
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        InputStream bookList = classloader.getResourceAsStream("error.txt");
+        MockMultipartFile file = new MockMultipartFile("file", "error.txt","plain/txt",bookList );
+
+       assertThrows(InvalidFileFormatException.class, () -> bookService.upload(file));
     }
 
     @Test
