@@ -23,7 +23,7 @@ public class BookController {
     }
 
     @PostMapping("/books")
-    List<Book> upload(@RequestParam(name="file") MultipartFile inputBookList) throws IOException {
+    List<Book> upload(@RequestParam(name="file") MultipartFile inputBookList) throws IOException, InvalidFileFormatException {
         return bookService.upload(inputBookList);
     }
 

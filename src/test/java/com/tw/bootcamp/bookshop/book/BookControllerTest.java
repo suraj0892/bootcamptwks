@@ -11,10 +11,12 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -61,7 +63,7 @@ class BookControllerTest {
     }
 
     @Test
-    void ShouldBeAbleToUploadBooks() throws Exception {
+    void ShouldBeAbleToUploadBooks() throws Exception, InvalidFileFormatException {
         MockMultipartFile file = new MockMultipartFile("file", "test.csv",
                 "text/csv", "".getBytes());
         when(bookService.upload(file)).thenReturn(new ArrayList<>());
@@ -70,6 +72,13 @@ class BookControllerTest {
                 .andExpect(status().isOk());
 
         verify(bookService, times(1)).upload(file);
+    }
+
+    @Test
+    void ShouldThrowExceptionWhenFileIsMissing() throws Exception {
+        mockMvc.perform(post("/books")
+                        .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MissingServletRequestPartException));
     }
 
     @Test
