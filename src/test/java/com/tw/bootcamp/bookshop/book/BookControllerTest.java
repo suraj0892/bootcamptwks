@@ -1,5 +1,6 @@
 package com.tw.bootcamp.bookshop.book;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tw.bootcamp.bookshop.user.UserService;
 import org.junit.jupiter.api.Test;
@@ -82,14 +83,14 @@ class BookControllerTest {
     }
 
     @Test
-    void shouldListBooksWithMatchedTitleWhenPresent() throws Exception {
+    void shouldListBooksWithMatchedTitleWhenPresent() throws InvalidRequestParameterException, Exception {
         SearchRequest searchRequest = new SearchRequest("Wings of Fire", "");
         List<Book> books = new ArrayList<Book>() {{
             new BookTestBuilder().withName(searchRequest.getTitle()).build();
         }};
         when(bookService.search(searchRequest.getTitle(), searchRequest.getAuthor())).thenReturn(books);
 
-        mockMvc.perform(post("/search")
+        mockMvc.perform(post("/books/search")
                         .content(objectMapper.writeValueAsString(searchRequest))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

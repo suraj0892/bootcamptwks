@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -49,7 +50,11 @@ public class BookService {
         }
     }
 
-    public List<Book> search(String title, String author) {
+    public List<Book> search(String title, String author) throws InvalidRequestParameterException {
+        if (StringUtils.isBlank(title) && StringUtils.isBlank(author)) {
+            throw new InvalidRequestParameterException("Book title and author should not be empty!");
+        }
+
         return bookRepository.findByNameStartingWithAndAuthorNameStartingWith(title, author);
     }
 

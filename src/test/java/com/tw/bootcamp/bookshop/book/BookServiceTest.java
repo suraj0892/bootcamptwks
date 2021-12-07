@@ -2,11 +2,11 @@ package com.tw.bootcamp.bookshop.book;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.Nested;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 
+import javax.validation.ConstraintViolationException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -82,7 +82,7 @@ class BookServiceTest {
     }
 
     @Test
-    void shouldListBooksWhenTitleMatches() {
+    void shouldListBooksWhenTitleMatches() throws InvalidRequestParameterException {
         Book wingsOfFire = new BookTestBuilder().withName("Wings of Fire").withAuthor("Author").build();
         Book animalFarm = new BookTestBuilder().withName("Animal Farm").withAuthor("Author").build();
         bookRepository.save(wingsOfFire);
@@ -95,7 +95,7 @@ class BookServiceTest {
     }
 
     @Test
-    void shouldNotListBooksWhenTitleDoesNotMatches() {
+    void shouldNotListBooksWhenTitleDoesNotMatches() throws InvalidRequestParameterException {
         Book wingsOfFire = new BookTestBuilder().withName("Wings of Fire").withAuthor("Author").build();
         Book animalFarm = new BookTestBuilder().withName("Animal Farm").withAuthor("Author").build();
         bookRepository.save(wingsOfFire);
@@ -107,7 +107,7 @@ class BookServiceTest {
     }
 
     @Test
-    void shouldListBooksWhenAuthorMatches() {
+    void shouldListBooksWhenAuthorMatches() throws InvalidRequestParameterException {
         Book wingsOfFire = new BookTestBuilder().withAuthor("Wings of Fire").withName("Title").build();
         Book animalFarm = new BookTestBuilder().withAuthor("Animal Farm").withName("Title").build();
         bookRepository.save(wingsOfFire);
@@ -120,7 +120,7 @@ class BookServiceTest {
     }
 
     @Test
-    void shouldNotListBooksWhenAuthorDoesNotMatches() {
+    void shouldNotListBooksWhenAuthorDoesNotMatches() throws InvalidRequestParameterException {
         Book wingsOfFire = new BookTestBuilder().withAuthor("Wings of Fire").withName("Title").build();
         Book animalFarm = new BookTestBuilder().withAuthor("Animal Farm").withName("Title").build();
         bookRepository.save(wingsOfFire);
@@ -132,7 +132,7 @@ class BookServiceTest {
     }
 
     @Test
-    void shouldListBooksWhenAuthorAndTitleMatches() {
+    void shouldListBooksWhenAuthorAndTitleMatches() throws InvalidRequestParameterException {
         Book wingsOfFire = new BookTestBuilder().withName("Wings of Fire").withAuthor("Saugata").build();
         Book animalFarm = new BookTestBuilder().withName("Animal Farm").withAuthor("Ankit").build();
         Book wingsOfFireII = new BookTestBuilder().withName("Wings of Fire II").withAuthor("SaugataB").build();
@@ -150,7 +150,7 @@ class BookServiceTest {
     }
 
     @Test
-    void shouldListBooksWhenAuthorAndTitleDoesNotMatches() {
+    void shouldListBooksWhenAuthorAndTitleDoesNotMatches() throws InvalidRequestParameterException {
         Book wingsOfFire = new BookTestBuilder().withName("Wings of Fire").withAuthor("Saugata").build();
         Book animalFarm = new BookTestBuilder().withName("Animal Farm").withAuthor("Ankit").build();
         Book wingsOfFireII = new BookTestBuilder().withName("Wings of Fire II").withAuthor("SaugataB").build();
@@ -163,5 +163,10 @@ class BookServiceTest {
         List<Book> books = bookService.search("Extreme Programming", "Kent Beck");
 
         assertEquals(0, books.size());
+    }
+
+    @Test
+    void shouldThrowExceptionWhenTitleAndAuthorAreNullOrEmpty() {
+        assertThrows(InvalidRequestParameterException.class, () -> bookService.search("", ""));
     }
 }
