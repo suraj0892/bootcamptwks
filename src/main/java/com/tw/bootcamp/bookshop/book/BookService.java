@@ -34,7 +34,7 @@ public class BookService {
 
     public List<Book> upload(@RequestParam("file") MultipartFile file) throws IOException, InvalidFileFormatException {
 
-        if(!file.getContentType().equalsIgnoreCase("text/csv"))
+        if(!"text/csv".equalsIgnoreCase(file.getContentType()))
             throw new InvalidFileFormatException("Only Valid csv files are allowed");
 
         try (BufferedReader fileReader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
