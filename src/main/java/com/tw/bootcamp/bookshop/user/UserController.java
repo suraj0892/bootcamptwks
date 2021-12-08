@@ -4,6 +4,9 @@ package com.tw.bootcamp.bookshop.user;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +22,8 @@ public class UserController {
     private UserService userService;
 
     @Operation(summary = "Create user", description = "Create user for book shop", tags = { "User Service" })
+    @ApiResponse(responseCode = "201", description = "User successfully created", content = @Content(schema = @Schema(implementation = UserView.class)))
+    @ApiResponse(responseCode = "400", description = "Bad request")
     @PostMapping
     ResponseEntity<UserView> create(@RequestBody CreateUserRequest userRequest) throws InvalidEmailException {
         User user = userService.create(userRequest);
