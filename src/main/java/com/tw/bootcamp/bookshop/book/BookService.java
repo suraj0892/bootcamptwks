@@ -7,9 +7,11 @@ import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -47,6 +49,10 @@ public class BookService {
             updateBookForMatchingIsbn(newBooks);
 
             return bookRepository.saveAll(newBooks);
+        }
+        catch(TransactionSystemException ex){
+            //need to implement Custom Exception
+            throw new NumberFormatException();
         }
     }
 
