@@ -61,25 +61,6 @@ class BookControllerTest {
     }
 
     @Test
-    void ShouldBeAbleToUploadBooks() throws Exception, InvalidFileFormatException {
-        MockMultipartFile file = new MockMultipartFile("file", "test.csv",
-                "text/csv", "".getBytes());
-        when(bookService.upload(file)).thenReturn(new ArrayList<>());
-
-        mockMvc.perform(multipart("/books").file(file))
-                .andExpect(status().isOk());
-
-        verify(bookService, times(1)).upload(file);
-    }
-
-    @Test
-    void ShouldThrowExceptionWhenFileIsMissing() throws Exception {
-        mockMvc.perform(post("/books")
-                        .contentType(MediaType.MULTIPART_FORM_DATA))
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MissingServletRequestPartException));
-    }
-
-    @Test
     void shouldListBooksWithMatchedTitleWhenPresent() throws InvalidRequestParameterException, Exception, NoBooksFoundException {
         SearchRequest searchRequest = new SearchRequest("Wings of Fire", "");
         List<Book> books = new ArrayList<Book>() {{

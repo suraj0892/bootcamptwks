@@ -1,5 +1,6 @@
 package com.tw.bootcamp.bookshop.auth;
 
+import com.tw.bootcamp.bookshop.user.Role;
 import com.tw.bootcamp.bookshop.user.User;
 import com.tw.bootcamp.bookshop.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,10 @@ public class BasicAuthConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers(HttpMethod.POST,"/users").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .antMatchers(HttpMethod.GET,"/admin/**").hasRole(String.valueOf(Role.ADMIN))
+                .antMatchers(HttpMethod.POST,"/admin/**").hasRole(String.valueOf(Role.ADMIN))
+                .antMatchers(HttpMethod.PUT,"/admin/**").hasRole(String.valueOf(Role.ADMIN))
+                .antMatchers(HttpMethod.DELETE,"/admin/**").hasRole(String.valueOf(Role.ADMIN))
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic()

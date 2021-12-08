@@ -28,12 +28,6 @@ public class BookController {
         return books;
     }
 
-    @Operation(summary = "Upload books", description = "Upload books for book shop", tags = {"Book Service"})
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    List<Book> upload(@RequestPart("file") MultipartFile inputBookList) throws IOException, InvalidFileFormatException {
-        return bookService.upload(inputBookList);
-    }
-
     @Operation(summary = "Search books", description = "Search books from book shop", tags = {"Book Service"})
     @PostMapping("/search")
     List<Book> search(@RequestBody SearchRequest searchRequest) throws InvalidRequestParameterException, NoBooksFoundException {
