@@ -23,8 +23,10 @@ public class BookController{
 
     @Operation(summary = "List books", description = "List all the books from book shop", tags = {"Book Service"})
     @GetMapping
-    List<Book> list() {
-        return bookService.fetchAll();
+    List<Book> list(@RequestParam(required = false) String sortByPrice) {
+        List<Book> books = sortByPrice==null ? bookService.fetchAll() : bookService.
+                fetchAllByOrder(sortByPrice);
+        return books;
     }
 
     @PostMapping("/search")
