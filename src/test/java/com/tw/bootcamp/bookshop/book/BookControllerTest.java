@@ -75,4 +75,11 @@ class BookControllerTest {
                 .andExpect(content().string(objectMapper.writeValueAsString(books)));
         verify(bookService, times(1)).search(searchRequest.getTitle(), searchRequest.getAuthor());
     }
+
+    @Test
+    @WithMockUser(username = "admin@test.com", password = "admin", roles = "ADMIN")
+    void shouldBeAbleToSeeBookListForAdminRole() throws Exception {
+        mockMvc.perform(get("/books"))
+                .andExpect(status().isOk());
+    }
 }

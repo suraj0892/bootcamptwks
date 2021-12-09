@@ -40,7 +40,7 @@ class UserControllerTest {
         CreateUserRequest userCredentials = buildCreateUserRequest();
         User user = new UserTestBuilder().withId(1L).withEmail(email).build();
         when(userService.create(userCredentials)).thenReturn(user);
-        UserView userView = UserView.builder().id(user.getId().toString()).email(email).build();
+        UserView userView = UserView.builder().id(user.getId().toString()).email(email).role(Role.USER).build();
 
         mockMvc.perform(post("/users")
                 .content(objectMapper.writeValueAsString(userCredentials))
@@ -76,4 +76,6 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.message").value("Validation failed"))
                 .andExpect(jsonPath("$.errors.email").value("Email is mandatory"));
     }
+
+
 }
