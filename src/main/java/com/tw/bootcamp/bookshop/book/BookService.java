@@ -82,6 +82,15 @@ public class BookService {
         return foundBooks;
     }
 
+    public List<Book> fetchAllByOrder(String sortBy) {
+        List<Book> books = fetchAll();
+        if (sortBy.equalsIgnoreCase("asc")) {
+            books.sort(new BookPriceComparator());
+        } else if (sortBy.equalsIgnoreCase("desc")) {
+            books.sort(new BookPriceComparator().reversed());
+        }
+        return books;
+    }
     public Optional<Book> getById(long bookId) {
         return bookRepository.findById(bookId);
     }

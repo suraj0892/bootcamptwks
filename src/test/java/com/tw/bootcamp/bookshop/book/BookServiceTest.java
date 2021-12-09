@@ -1,5 +1,6 @@
 package com.tw.bootcamp.bookshop.book;
 
+import com.tw.bootcamp.bookshop.money.Money;
 import com.tw.bootcamp.bookshop.book.exceptions.InvalidFileFormatException;
 import com.tw.bootcamp.bookshop.book.exceptions.InvalidRequestParameterException;
 import com.tw.bootcamp.bookshop.book.exceptions.NoBooksFoundException;
@@ -56,6 +57,38 @@ class BookServiceTest {
         assertEquals(2, books.size());
         assertEquals("Animal Farm", books.get(0)
                 .getName());
+    }
+
+    @Test
+    void shouldFetchAllBooksBeSortedByPriceAscending() {
+        Book lowerPriceBook = new BookTestBuilder().withPrice(400)
+                .build();
+        Book higherPriceBook = new BookTestBuilder().withPrice(750)
+                .build();
+        bookRepository.save(higherPriceBook);
+        bookRepository.save(lowerPriceBook);
+
+        List<Book> books = bookService.fetchAllByOrder("asc");
+
+        assertEquals(2, books.size());
+        assertEquals(400, books.get(0)
+                .getPrice().getAmount());
+    }
+
+    @Test
+    void shouldFetchAllBooksBeSortedByPriceDescending() {
+        Book lowerPriceBook = new BookTestBuilder().withPrice(400)
+                .build();
+        Book higherPriceBook = new BookTestBuilder().withPrice(750)
+                .build();
+        bookRepository.save(lowerPriceBook);
+        bookRepository.save(higherPriceBook);
+
+        List<Book> books = bookService.fetchAllByOrder("desc");
+
+        assertEquals(2, books.size());
+        assertEquals(750, books.get(0)
+                .getPrice().getAmount());
     }
 
     @Nested

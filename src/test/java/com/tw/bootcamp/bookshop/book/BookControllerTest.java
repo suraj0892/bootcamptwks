@@ -13,7 +13,9 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
@@ -47,6 +49,22 @@ class BookControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(1));
         verify(bookService, times(1)).fetchAll();
+    }
+
+    @Test
+    void shouldListAllBooksWhenSortOrderAscending() throws Exception {
+        List<Book> books = new ArrayList<>();
+        Book book = new BookTestBuilder().build();
+        books.add(book);
+        when(bookService.fetchAllByOrder(anyString())).thenReturn(books);
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put("sortByPrice", "asc");
+        mockMvc.perform(get("/books").param("sortByPrice","asc")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1));
+        verify(bookService, times(1)).fetchAllByOrder(anyString());
     }
 
     @Test
