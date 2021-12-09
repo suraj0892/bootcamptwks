@@ -1,5 +1,6 @@
 package com.tw.bootcamp.bookshop.user.address;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tw.bootcamp.bookshop.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,7 +28,10 @@ public class Address {
     private String pinCode;
     @NotBlank
     private String country;
+
     private boolean isDefault;
+
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
