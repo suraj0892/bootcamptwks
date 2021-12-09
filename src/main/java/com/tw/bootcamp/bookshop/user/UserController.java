@@ -1,14 +1,7 @@
 package com.tw.bootcamp.bookshop.user;
 
 
-import com.tw.bootcamp.bookshop.error.ErrorResponse;
-import com.tw.bootcamp.bookshop.user.documenation.UserCreationDocumentation;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import com.tw.bootcamp.bookshop.documentation.UserCreationDocumentation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

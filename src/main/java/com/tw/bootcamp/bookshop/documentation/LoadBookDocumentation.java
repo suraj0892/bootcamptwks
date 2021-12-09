@@ -1,4 +1,4 @@
-package com.tw.bootcamp.bookshop.book.documentation;
+package com.tw.bootcamp.bookshop.documentation;
 
 import com.tw.bootcamp.bookshop.book.Book;
 import com.tw.bootcamp.bookshop.error.ErrorResponse;
@@ -15,18 +15,15 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-@Operation(summary = "Search books", description = "Search books by title and author from book shop", tags = {"Book Service"})
-@ApiResponse(responseCode = "200", description = "Search books successful",
+@Operation(summary = "Upload books", description = "Upload books for book shop", tags = {"Book Service"})
+@ApiResponse(responseCode = "200", description = "Uploaded books successfully",
         content = @Content(
                 mediaType = "application/json",
                 array = @ArraySchema(schema = @Schema(implementation = Book.class))
         ))
-@ApiResponse(responseCode = "400", description = "User must search with either title or author",
+@ApiResponse(responseCode = "400", description = "Upload a valid csv file",
         content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-@ApiResponse(responseCode = "401", description = "Unauthorised user",
+@ApiResponse(responseCode = "401", description = "Unauthorised. Only Admin can upload books",
         content = @Content(schema = @Schema()))
-@ApiResponse(responseCode = "204", description = "No books found with matching search criteria",
-        content = @Content(schema = @Schema()))
-public @interface SearchDocumentation {
-
+public @interface LoadBookDocumentation {
 }

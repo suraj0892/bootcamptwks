@@ -1,4 +1,4 @@
-package com.tw.bootcamp.bookshop.user.documenation;
+package com.tw.bootcamp.bookshop.documentation;
 
 import com.tw.bootcamp.bookshop.error.ErrorResponse;
 import com.tw.bootcamp.bookshop.user.UserView;
