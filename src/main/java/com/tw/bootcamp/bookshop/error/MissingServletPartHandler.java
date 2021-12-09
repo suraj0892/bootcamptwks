@@ -1,7 +1,6 @@
 package com.tw.bootcamp.bookshop.error;
 
-import com.tw.bootcamp.bookshop.book.InvalidFileFormatException;
-import com.tw.bootcamp.bookshop.user.InvalidEmailException;
+import com.tw.bootcamp.bookshop.book.exceptions.InvalidFileFormatException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
