@@ -29,4 +29,9 @@ public class BookTestBuilder {
         bookBuilder.authorName(name);
         return this;
     }
+
+    public BookTestBuilder withId(long id) {
+        bookBuilder.id(id);
+        return this;
+    }
 }

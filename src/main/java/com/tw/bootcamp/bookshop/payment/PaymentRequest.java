@@ -1,14 +1,12 @@
 package com.tw.bootcamp.bookshop.payment;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Getter
+@EqualsAndHashCode
 public class PaymentRequest {
 
     private Integer orderId;

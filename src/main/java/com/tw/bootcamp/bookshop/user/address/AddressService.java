@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
+import java.util.Optional;
 
 @Service
 public class AddressService {
@@ -35,7 +36,7 @@ public class AddressService {
     }
 
     private void unMarkExistingDefaultAddress(CreateAddressRequest createRequest, User user) {
-        if(createRequest.isDefault() && isNotEmpty(user.getAddresses())) {
+        if (createRequest.isDefault() && isNotEmpty(user.getAddresses())) {
             List<Address> existingDefaultAddress = user.getAddresses().stream()
                     .filter(Address::isDefault)
                     .map(address -> {
@@ -45,5 +46,8 @@ public class AddressService {
             addressRepository.saveAll(existingDefaultAddress);
 
         }
+    }
+    public Optional<Address> getById(long addressId) {
+        return addressRepository.findById(addressId);
     }
 }
