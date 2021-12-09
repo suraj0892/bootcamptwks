@@ -1,6 +1,8 @@
 package com.tw.bootcamp.bookshop.user;
 
 
+import com.tw.bootcamp.bookshop.error.ErrorResponse;
+import com.tw.bootcamp.bookshop.user.documenation.UserCreationDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -21,9 +23,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @Operation(summary = "Create user", description = "Create user for book shop", tags = { "User Service" })
-    @ApiResponse(responseCode = "201", description = "User successfully created", content = @Content(schema = @Schema(implementation = UserView.class)))
-    @ApiResponse(responseCode = "400", description = "Bad request")
+    @UserCreationDocumentation
     @PostMapping
     ResponseEntity<UserView> create(@RequestBody CreateUserRequest userRequest) throws InvalidEmailException {
         User user = userService.create(userRequest);
