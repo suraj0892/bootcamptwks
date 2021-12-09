@@ -1,6 +1,6 @@
 package com.tw.bootcamp.bookshop.error;
 
-import com.tw.bootcamp.bookshop.book.InvalidRequestParameterException;
+import com.tw.bootcamp.bookshop.book.exceptions.InvalidRequestParameterException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
