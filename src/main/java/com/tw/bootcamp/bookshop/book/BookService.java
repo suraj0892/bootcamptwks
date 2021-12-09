@@ -82,4 +82,7 @@ public class BookService {
         return foundBooks;
     }
 
+    public Optional<Book> getById(long bookId) {
+        return bookRepository.findById(bookId);
+    }
 }
