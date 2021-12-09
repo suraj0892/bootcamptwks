@@ -40,6 +40,30 @@ public class Book {
     @Embedded
     private Money price;
 
+    private String imageUrl;
+    private String smallImageUrl;
+    private String isbn;
+    private int originalPublicationYear;
+    private String originalTitle;
+    private String languageCode;
+    private String averageRating;
+
+    public Book(String name, String authorName, Integer quantity, Long isbn13, Money price, String imageUrl,
+                String smallImageUrl, String isbn, int originalPublicationYear, String originalTitle, String languageCode, String averageRating) {
+        this.name = name;
+        this.authorName = authorName;
+        this.quantity = quantity;
+        this.isbn13 = isbn13;
+        this.price = price;
+        this.imageUrl = imageUrl;
+        this.smallImageUrl = smallImageUrl;
+        this.isbn = isbn;
+        this.originalPublicationYear = originalPublicationYear;
+        this.originalTitle = originalTitle;
+        this.languageCode = languageCode;
+        this.averageRating = averageRating;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

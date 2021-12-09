@@ -36,15 +36,11 @@ public class BookService {
 
     public List<Book> upload(@RequestParam("file") MultipartFile file) throws IOException, InvalidFileFormatException {
 
-        if(!"text/csv".equalsIgnoreCase(file.getContentType()))
+        if(isCsvFile(file))
             throw new InvalidFileFormatException("Only Valid csv files are allowed");
 
-        try (BufferedReader fileReader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
-             CSVParser csvParser = new CSVParser(fileReader,
-                     CSVFormat.Builder.create(CSVFormat.DEFAULT).setHeader()
-                             .setIgnoreHeaderCase(true).setSkipHeaderRecord(true).setTrim(true).build())) {
-
-            List<Book> newBooks = convertInputCsvRecordToListOfBook(csvParser.getRecords());
+        try{
+            List<Book> newBooks = BookCsvReader.readFromFile(file);
 
             updateBookForMatchingIsbn(newBooks);
 
@@ -54,6 +50,10 @@ public class BookService {
             //need to implement Custom Exception
             throw new NumberFormatException();
         }
+    }
+
+    private boolean isCsvFile(MultipartFile file) {
+        return !"text/csv".equalsIgnoreCase(file.getContentType());
     }
 
     private void updateBookForMatchingIsbn(List<Book> newBooks) {
@@ -69,7 +69,7 @@ public class BookService {
 
     private Book getMatchingBook(List<Book> oldBooksMatchingIsbn, Book newBook) {
         return oldBooksMatchingIsbn.stream()
-                .filter(book1 -> book1.equals(newBook))
+                .filter(oldBook -> oldBook.equals(newBook))
                 .findFirst().get();
     }
 
@@ -88,14 +88,4 @@ public class BookService {
         return foundBooks;
     }
 
-    private List<Book> convertInputCsvRecordToListOfBook(List<CSVRecord> bookRecords){
-        List<Book> books = new ArrayList<>();
-        bookRecords.forEach(bookRecord -> books.add(Book.builder()
-                .name(bookRecord.get("title"))
-                .authorName(bookRecord.get("author"))
-                .isbn13(Long.parseLong(bookRecord.get("isbn13")))
-                .quantity(Integer.parseInt(bookRecord.get("books_count")))
-                .price(Money.rupees(Double.parseDouble(bookRecord.get("price")))).build()));
-        return books;
-    }
 }
