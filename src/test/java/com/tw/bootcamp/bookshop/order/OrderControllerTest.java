@@ -45,11 +45,13 @@ class OrderControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
+    final static String email = "test@testemail.com";
+
     @Test
     void shouldCreateOrderWhenOrderDetailsAreValid() throws Exception, InvalidOrderRequestException {
         Book book = new BookTestBuilder().withId(1).withName("Harry Potter").withAuthor("J.K").withPrice(100).build();
         Address address = createAddress();
-        CreateOrderRequest createOrderRequest = new CreateOrderRequest(book.getId(), address.getId(), 2);
+        CreateOrderRequest createOrderRequest = new CreateOrderRequest(book.getId(), address.getId(), 2, email);
         Order order = new Order.OrderBuilder()
                 .id(1)
                 .book(book)
@@ -70,7 +72,7 @@ class OrderControllerTest {
 
     @Test
     void shouldThrowExceptionWhenOrderDetailsAreInvalid() throws Exception, InvalidOrderRequestException {
-        CreateOrderRequest createOrderRequest = new CreateOrderRequest(2L, 5L, 2);
+        CreateOrderRequest createOrderRequest = new CreateOrderRequest(2L, 5L, 2, email);
 
         when(orderService.create(any())).thenThrow(InvalidOrderRequestException.class);
 
