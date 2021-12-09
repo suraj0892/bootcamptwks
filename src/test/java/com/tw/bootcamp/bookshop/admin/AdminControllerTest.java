@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tw.bootcamp.bookshop.book.BookService;
 import com.tw.bootcamp.bookshop.book.InvalidFileFormatException;
 import com.tw.bootcamp.bookshop.user.UserService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -67,4 +68,6 @@ class AdminControllerTest {
                         .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof MissingServletRequestPartException));
     }
+
+
 }
