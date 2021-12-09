@@ -33,5 +33,5 @@ public class Order {
     @Embedded
     private Money totalAmount;
 
-    private String paymentStatus;
+    private OrderStatus status;
 }
