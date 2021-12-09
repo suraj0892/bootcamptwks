@@ -1,19 +1,17 @@
 package com.tw.bootcamp.bookshop.book;
 
+import com.tw.bootcamp.bookshop.book.documentation.SearchDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 @RequestMapping("/books")
 @RestController
 @Tag(name = "Book Service", description = "APIs for book service")
-public class BookController {
+public class BookController{
     private final BookService bookService;
 
     @Autowired
@@ -28,8 +26,8 @@ public class BookController {
         return books;
     }
 
-    @Operation(summary = "Search books", description = "Search books from book shop", tags = {"Book Service"})
     @PostMapping("/search")
+    @SearchDocumentation
     List<Book> search(@RequestBody SearchRequest searchRequest) throws InvalidRequestParameterException, NoBooksFoundException {
         return bookService.search(searchRequest.getTitle(), searchRequest.getAuthor());
     }
