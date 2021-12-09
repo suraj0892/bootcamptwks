@@ -1,6 +1,6 @@
 package com.tw.bootcamp.bookshop.admin;
 
-import com.tw.bootcamp.bookshop.admin.documentation.LoadBookDocumentation;
+import com.tw.bootcamp.bookshop.documentation.LoadBookDocumentation;
 import com.tw.bootcamp.bookshop.book.Book;
 import com.tw.bootcamp.bookshop.book.BookService;
 import com.tw.bootcamp.bookshop.book.exceptions.InvalidFileFormatException;

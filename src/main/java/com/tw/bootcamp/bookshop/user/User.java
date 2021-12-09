@@ -30,7 +30,7 @@ public class User {
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
     private List<Address> addresses;
 
     private User(String email, String password, Role role) {

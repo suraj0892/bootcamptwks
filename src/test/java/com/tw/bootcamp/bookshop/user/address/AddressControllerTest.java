@@ -40,8 +40,7 @@ class AddressControllerTest {
     void shouldCreateAddressWhenValid() throws Exception {
         CreateAddressRequest createRequest = createAddress();
         Address address = new AddressTestBuilder().build();
-        when(addressService.create(eq(createRequest), any(User.class))).thenReturn(address);
-        when(userService.findByEmail(anyString())).thenReturn(Optional.of(new UserTestBuilder().build()));
+        when(addressService.create(eq(createRequest), any(String.class))).thenReturn(address);
 
         mockMvc.perform(post("/addresses")
                 .content(objectMapper.writeValueAsString(createRequest))
@@ -49,14 +48,13 @@ class AddressControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().string(objectMapper.writeValueAsString(address)));
 
-        verify(addressService, times(1)).create(eq(createRequest), any(User.class));
+        verify(addressService, times(1)).create(eq(createRequest), any(String.class));
     }
 
     @Test
     void shouldNotCreateAddressWhenInValid() throws Exception {
         CreateAddressRequest createRequest = CreateAddressRequest.builder().city(null).build();
         when(addressService.create(any(), any())).thenThrow(new ConstraintViolationException(new HashSet<>()));
-        when(userService.findByEmail(anyString())).thenReturn(Optional.of(new UserTestBuilder().build()));
 
         mockMvc.perform(post("/addresses")
                 .content(objectMapper.writeValueAsString(createRequest))

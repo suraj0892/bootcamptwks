@@ -1,6 +1,6 @@
 package com.tw.bootcamp.bookshop.book;
 
-import com.tw.bootcamp.bookshop.book.documentation.SearchDocumentation;
+import com.tw.bootcamp.bookshop.documentation.SearchDocumentation;
 import com.tw.bootcamp.bookshop.book.exceptions.InvalidRequestParameterException;
 import com.tw.bootcamp.bookshop.book.exceptions.NoBooksFoundException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,8 +24,7 @@ public class BookController{
     @Operation(summary = "List books", description = "List all the books from book shop", tags = {"Book Service"})
     @GetMapping
     List<Book> list() {
-        List<Book> books = bookService.fetchAll();
-        return books;
+        return bookService.fetchAll();
     }
 
     @PostMapping("/search")
