@@ -16,18 +16,17 @@ public class PaymentService {
     @Autowired
     PaymentGatewayService paymentGatewayService;
 
-    public String pay(PaymentRequest paymentRequest) {
+    public String pay(PaymentRequest paymentRequest) throws PaymentFailedException{
 
-        ResponseEntity resFromPaymentGateway  = paymentGatewayService.payWithCreditCard(paymentRequest.getCardDetails());
+        ResponseEntity resFromPaymentGateway = paymentGatewayService.payWithCreditCard(paymentRequest.getCardDetails());
 
-        if(HttpStatus.ACCEPTED.equals(resFromPaymentGateway.getStatusCode())){
+        if (HttpStatus.ACCEPTED.equals(resFromPaymentGateway.getStatusCode())) {
 
             return "Order Placed Successfully!!!";
-        } else{
+        } else {
 
-            return "Order Cancelled due To Payment Failure..Please contact Customer Support.";
+            throw new PaymentFailedException("Payment Failed , please contact Customer Care.");
         }
-
     }
 
 
