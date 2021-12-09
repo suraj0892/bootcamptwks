@@ -1,5 +1,6 @@
 package com.tw.bootcamp.bookshop.user.address;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
@@ -20,4 +21,7 @@ public class CreateAddressRequest {
     private String pinCode;
     @NotBlank
     private String country;
+
+    @JsonProperty("default")
+    private boolean isDefault = false;
 }
