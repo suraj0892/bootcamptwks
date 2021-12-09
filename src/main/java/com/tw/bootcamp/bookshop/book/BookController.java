@@ -1,6 +1,8 @@
 package com.tw.bootcamp.bookshop.book;
 
 import com.tw.bootcamp.bookshop.book.documentation.SearchDocumentation;
+import com.tw.bootcamp.bookshop.book.exceptions.InvalidRequestParameterException;
+import com.tw.bootcamp.bookshop.book.exceptions.NoBooksFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;

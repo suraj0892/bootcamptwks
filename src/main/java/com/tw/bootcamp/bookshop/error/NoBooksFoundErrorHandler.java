@@ -1,6 +1,6 @@
 package com.tw.bootcamp.bookshop.error;
 
-import com.tw.bootcamp.bookshop.book.NoBooksFoundException;
+import com.tw.bootcamp.bookshop.book.exceptions.NoBooksFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
