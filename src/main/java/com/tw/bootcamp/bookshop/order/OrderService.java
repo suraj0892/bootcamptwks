@@ -47,10 +47,14 @@ public class OrderService {
             throw new InvalidOrderRequestException("Invalid order count");
         }
 
+        Money money = book.get().getPrice();
+        double subTotal = money.getAmount() * createOrderRequest.getCount();
+
         Order order = Order.builder()
                 .userId(user.getId())
                 .book(book.get())
                 .address(address.get())
+                .totalAmount(new Money(money.getCurrency(), subTotal))
                 .count(createOrderRequest.getCount())
                 .status(OrderStatus.INITIATED)
                 .build();
