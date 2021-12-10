@@ -4,6 +4,7 @@ import lombok.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Getter
 @EqualsAndHashCode
 public class PaymentRequest {

@@ -13,7 +13,7 @@ import java.util.List;
 @RequestMapping("/books")
 @RestController
 @Tag(name = "Book Service", description = "APIs for book service")
-public class BookController{
+public class BookController {
     private final BookService bookService;
 
     @Autowired
@@ -24,9 +24,8 @@ public class BookController{
     @Operation(summary = "List books", description = "List all the books from book shop", tags = {"Book Service"})
     @GetMapping
     List<Book> list(@RequestParam(required = false) String sortByPrice) {
-        List<Book> books = sortByPrice==null ? bookService.fetchAll() : bookService.
+        return sortByPrice == null ? bookService.fetchAll() : bookService.
                 fetchAllByOrder(sortByPrice);
-        return books;
     }
 
     @PostMapping("/search")
