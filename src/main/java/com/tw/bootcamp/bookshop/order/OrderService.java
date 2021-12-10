@@ -2,7 +2,6 @@ package com.tw.bootcamp.bookshop.order;
 
 import com.tw.bootcamp.bookshop.book.Book;
 import com.tw.bootcamp.bookshop.book.BookService;
-import com.tw.bootcamp.bookshop.money.Money;
 import com.tw.bootcamp.bookshop.user.User;
 import com.tw.bootcamp.bookshop.user.UserService;
 import com.tw.bootcamp.bookshop.user.address.Address;
@@ -29,9 +28,9 @@ public class OrderService {
     @Autowired
     OrderRepository orderRepository;
 
-    public Order create(CreateOrderRequest createOrderRequest) throws InvalidOrderRequestException {
+    public Order create(CreateOrderRequest createOrderRequest, String userEmail) throws InvalidOrderRequestException {
 
-        User user = userService.findByEmail(createOrderRequest.getUserEmail()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        User user = userService.findByEmail(userEmail).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         Optional<Book> book = bookService.getById(createOrderRequest.getBookId());
         if (!book.isPresent()) {

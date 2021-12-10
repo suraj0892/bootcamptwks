@@ -1,6 +1,5 @@
 package com.tw.bootcamp.bookshop.book;
 
-import com.tw.bootcamp.bookshop.money.Money;
 import com.tw.bootcamp.bookshop.book.exceptions.InvalidFileFormatException;
 import com.tw.bootcamp.bookshop.book.exceptions.InvalidRequestParameterException;
 import com.tw.bootcamp.bookshop.book.exceptions.NoBooksFoundException;
@@ -68,7 +67,7 @@ class BookServiceTest {
         bookRepository.save(higherPriceBook);
         bookRepository.save(lowerPriceBook);
 
-        List<Book> books = bookService.fetchAllByOrder("asc");
+        List<Book> books = bookService.fetchAll("asc");
 
         assertEquals(2, books.size());
         assertEquals(400, books.get(0)
@@ -84,7 +83,7 @@ class BookServiceTest {
         bookRepository.save(lowerPriceBook);
         bookRepository.save(higherPriceBook);
 
-        List<Book> books = bookService.fetchAllByOrder("desc");
+        List<Book> books = bookService.fetchAll("desc");
 
         assertEquals(2, books.size());
         assertEquals(750, books.get(0)

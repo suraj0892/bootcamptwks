@@ -56,7 +56,7 @@ class BookControllerTest {
         List<Book> books = new ArrayList<>();
         Book book = new BookTestBuilder().build();
         books.add(book);
-        when(bookService.fetchAllByOrder(anyString())).thenReturn(books);
+        when(bookService.fetchAll(anyString())).thenReturn(books);
 
         Map<String, String> headers = new HashMap<>();
         headers.put("sortByPrice", "asc");
@@ -64,7 +64,7 @@ class BookControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(1));
-        verify(bookService, times(1)).fetchAllByOrder(anyString());
+        verify(bookService, times(1)).fetchAll(anyString());
     }
 
     @Test
