@@ -1,6 +1,7 @@
 package com.tw.bootcamp.bookshop.documentation;
 
 import com.tw.bootcamp.bookshop.error.ErrorResponse;
+import com.tw.bootcamp.bookshop.order.Order;
 import com.tw.bootcamp.bookshop.user.address.Address;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,9 +15,10 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
+
 @Operation(summary = "Order Book", description = "Place an order of Book", tags = {"Order Service"})
 @ApiResponse(responseCode = "201", description = "Order Created",
-        content = @Content(schema = @Schema(implementation = Address.class)))
+        content = @Content(schema = @Schema(implementation = Order.class)))
 @ApiResponse(responseCode = "401", description = "Unauthorised",
         content = @Content(schema = @Schema()))
 @ApiResponse(responseCode = "404", description = "Order Request is Invalid",
