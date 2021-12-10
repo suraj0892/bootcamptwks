@@ -3,12 +3,16 @@ package com.tw.bootcamp.bookshop.order;
 import com.tw.bootcamp.bookshop.book.Book;
 import com.tw.bootcamp.bookshop.money.Money;
 import com.tw.bootcamp.bookshop.user.address.Address;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 
 import javax.persistence.*;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @Getter
 @Entity
