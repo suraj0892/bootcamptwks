@@ -11,7 +11,15 @@ public class PaymentFailedHandler {
 
     @ExceptionHandler({PaymentFailedException.class})
     public ResponseEntity<ErrorResponse> handlePaymentFailure(PaymentFailedException ex) {
-        ErrorResponse apiError = new ErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+        com.tw.bootcamp.bookshop.payment.ErrorResponse error = (com.tw.bootcamp.bookshop.payment.ErrorResponse) ex.getfailureMessage();
+
+        ErrorResponse apiError = new ErrorResponse(HttpStatus.BAD_REQUEST, "Payment Failed.");
+
+        for(int i=0; i < error.getDetails().length;i++){
+            apiError.getErrors().put(String.valueOf(i), error.getDetails()[i]);
+        }
+
         return new ResponseEntity<>(apiError, apiError.getStatus());
     }
+
 }
