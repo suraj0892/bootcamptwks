@@ -25,18 +25,26 @@ public class PaymentService {
 
     public String pay(PaymentRequest paymentRequest) throws PaymentFailedException, JsonProcessingException {
         ErrorResponse error = null;
+        ResponseEntity resFromPaymentGateway = null;
         try{
-            ResponseEntity resFromPaymentGateway = paymentGatewayService.payWithCreditCard(paymentRequest.getCardDetails());
-            if (HttpStatus.ACCEPTED.equals(resFromPaymentGateway.getStatusCode())) {
-                orderService.updateOrderStatus(paymentRequest.getOrderId(), OrderStatus.PAYMENT_COMPLETE);
-                return "Order Placed Successfully!!!";
-            }
+            resFromPaymentGateway = paymentGatewayService.payWithCreditCard(paymentRequest.getCardDetails());
         }
         catch(HttpClientErrorException ex){
             orderService.updateOrderStatus(paymentRequest.getOrderId(), OrderStatus.PAYMENT_FAILED);
             error =  new ObjectMapper().readValue(ex.getResponseBodyAsString(), ErrorResponse.class);
+            throw new PaymentFailedException(error);
         }
-        throw new PaymentFailedException(error);
+
+        return updatePaymentSuccess(paymentRequest, resFromPaymentGateway);
+
+    }
+
+    private String updatePaymentSuccess(PaymentRequest paymentRequest, ResponseEntity resFromPaymentGateway) {
+        if (HttpStatus.ACCEPTED.equals(resFromPaymentGateway.getStatusCode())) {
+            orderService.updateOrderStatus(paymentRequest.getOrderId(), OrderStatus.PAYMENT_COMPLETE);
+            return "Order Placed Successfully!!!";
+        }
+        return "";
     }
 
 }
