@@ -14,10 +14,10 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import javax.validation.ConstraintViolationException;
 
-import java.util.HashSet;
-import java.util.Optional;
+import java.util.*;
 
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -63,6 +63,30 @@ class AddressControllerTest {
                 .andExpect(jsonPath("$.message").value("Validation failed"));
 
         verify(addressService, times(1)).create(any(), any());
+    }
+
+    @Test
+    void shouldReturnUserAddressWhenPresent() throws Exception {
+        List<Address> address = Collections.singletonList(new AddressTestBuilder().build());
+        when(addressService.get(any(String.class))).thenReturn(address);
+
+        mockMvc.perform(get("/addresses"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(objectMapper.writeValueAsString(address)));
+
+        verify(addressService, times(1)).get(any(String.class));
+    }
+
+    @Test
+    void shouldReturnEmptyWhenAddressNotPresent() throws Exception {
+        List<Address> address = new ArrayList<>();
+        when(addressService.get(any(String.class))).thenReturn(address);
+
+        mockMvc.perform(get("/addresses"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(objectMapper.writeValueAsString(address)));
+
+        verify(addressService, times(1)).get(any(String.class));
     }
 
     private CreateAddressRequest createAddress() {

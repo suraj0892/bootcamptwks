@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -49,5 +50,9 @@ public class AddressService {
     }
     public Optional<Address> getById(long addressId) {
         return addressRepository.findById(addressId);
+    }
+
+    public List<Address> get(String email) {
+        return new ArrayList<>();
     }
 }
