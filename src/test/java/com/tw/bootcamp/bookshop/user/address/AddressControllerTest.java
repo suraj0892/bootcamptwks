@@ -82,13 +82,11 @@ class AddressControllerTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenAddressNotPresent() throws Exception {
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NO_CONTENT, "No address found for user");
+    void shouldReturnNoContentWhenAddressNotPresent() throws Exception {
         when(addressService.get(any(String.class))).thenThrow(new NoAddressFoundException("No address found for user"));
 
         mockMvc.perform(get("/addresses"))
-                .andExpect(status().isNoContent())
-                .andExpect(content().string(objectMapper.writeValueAsString(errorResponse)));
+                .andExpect(status().isNoContent());
 
         verify(addressService, times(1)).get(any(String.class));
     }

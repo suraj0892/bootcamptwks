@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 @ApiResponse(responseCode = "401", description = "Unauthorised",
         content = @Content(schema = @Schema()))
 @ApiResponse(responseCode = "204", description = "Address Not Found",
-        content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+        content = @Content(schema = @Schema()))
 @ApiResponse(responseCode = "404", description = "User Not Found",
         content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
 public @interface GetAddressDocumentation {
