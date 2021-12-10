@@ -4,20 +4,16 @@ import com.tw.bootcamp.bookshop.user.User;
 import com.tw.bootcamp.bookshop.user.UserService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.Valid;
-import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
-import java.util.Optional;
 
 @Service
 public class AddressService {
@@ -60,7 +56,11 @@ public class AddressService {
         return addressRepository.findById(addressId);
     }
 
-    public List<Address> get(String email) {
-        return findUser(email).getAddresses();
+    public List<Address> get(String email) throws NoAddressFoundException {
+        List<Address> addresses = findUser(email).getAddresses();
+        if(CollectionUtils.isEmpty(addresses)) {
+            throw new NoAddressFoundException("No address found for user");
+        }
+        return addresses;
     }
 }

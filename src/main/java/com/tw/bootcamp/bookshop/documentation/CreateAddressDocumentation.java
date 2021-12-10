@@ -1,5 +1,6 @@
 package com.tw.bootcamp.bookshop.documentation;
 
+import com.tw.bootcamp.bookshop.error.ErrorResponse;
 import com.tw.bootcamp.bookshop.user.address.Address;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -18,5 +19,7 @@ import java.lang.annotation.Target;
         content = @Content(schema = @Schema(implementation = Address.class)))
 @ApiResponse(responseCode = "401", description = "Unauthorised",
         content = @Content(schema = @Schema()))
+@ApiResponse(responseCode = "404", description = "User Not Found",
+        content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
 public @interface CreateAddressDocumentation {
 }

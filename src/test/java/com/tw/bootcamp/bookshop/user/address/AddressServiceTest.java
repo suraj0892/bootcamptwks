@@ -93,7 +93,7 @@ class AddressServiceTest {
     }
 
     @Test
-    void shouldReturnAddressListForUserWhenPresent() {
+    void shouldReturnAddressListForUserWhenPresent() throws NoAddressFoundException {
         User user = userRepository.save(new UserTestBuilder().build());
         Address homeAddress = createHomeAddress(user.getEmail());
         Address officeAddress = createOfficeAddress(user.getEmail(), false);
@@ -101,6 +101,16 @@ class AddressServiceTest {
         List<Address> userAddressList = addressService.get(user.getEmail());
         assertIterableEquals(Arrays.asList(homeAddress, officeAddress), userAddressList);
     }
+
+    @Test
+    void shouldThrowErrorWhenAddressNotPresent() {
+        User user = userRepository.save(new UserTestBuilder().build());
+
+        NoAddressFoundException addressNotFoundException = assertThrows(NoAddressFoundException.class,
+                () -> addressService.get(user.getEmail()));
+        assertEquals("No address found for user", addressNotFoundException .getMessage());
+    }
+
 
     @Test
     void shouldThrowErrorWhenUserNotPresent() {

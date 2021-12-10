@@ -1,6 +1,7 @@
 package com.tw.bootcamp.bookshop.user.address;
 
 import com.tw.bootcamp.bookshop.documentation.CreateAddressDocumentation;
+import com.tw.bootcamp.bookshop.documentation.GetAddressDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +26,9 @@ public class AddressController {
         return new ResponseEntity<>(address, HttpStatus.CREATED);
     }
 
-    @Operation(summary = "Create address", description = "Create address for a user", tags = {"Address Service"})
+    @GetAddressDocumentation
     @GetMapping
-    public ResponseEntity<List<Address>> get(Principal principal) {
+    public ResponseEntity<List<Address>> get(Principal principal) throws NoAddressFoundException {
         return new ResponseEntity<>(addressService.get(principal.getName()), HttpStatus.OK);
     }
 }
