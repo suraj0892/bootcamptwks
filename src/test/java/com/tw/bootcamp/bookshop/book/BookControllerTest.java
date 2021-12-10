@@ -51,21 +51,6 @@ class BookControllerTest {
         verify(bookService, times(1)).fetchAll();
     }
 
-    @Test
-    void shouldListAllBooksWhenSortOrderAscending() throws Exception {
-        List<Book> books = new ArrayList<>();
-        Book book = new BookTestBuilder().build();
-        books.add(book);
-        when(bookService.fetchAll(anyString())).thenReturn(books);
-
-        Map<String, String> headers = new HashMap<>();
-        headers.put("sortByPrice", "asc");
-        mockMvc.perform(get("/books").param("sortByPrice","asc")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(1));
-        verify(bookService, times(1)).fetchAll(anyString());
-    }
 
     @Test
     void shouldBeEmptyListWhenNoBooksPresent() throws Exception {
