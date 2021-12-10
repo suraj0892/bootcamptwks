@@ -60,6 +60,7 @@ class OrderServiceTest {
         when(userService.findByEmail(email)).thenReturn(Optional.of(user));
         when(bookService.getById(1)).thenReturn(Optional.of(book));
         when(addressService.getById(1)).thenReturn(Optional.of(address));
+        doNothing().when(bookService).reduceBookInventoryCountBy(createOrderRequest.getCount(), book);
         when(orderRepository.save(any(Order.class))).thenReturn(order);
 
         orderService.create(createOrderRequest);

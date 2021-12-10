@@ -94,4 +94,9 @@ public class BookService {
     public Optional<Book> getById(long bookId) {
         return bookRepository.findById(bookId);
     }
+
+    public void reduceBookInventoryCountBy(int count, Book book) {
+        book.setQuantity(book.getQuantity() - count);
+        bookRepository.save(book);
+    }
 }

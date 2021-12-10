@@ -59,6 +59,8 @@ public class OrderService {
                 .status(OrderStatus.INITIATED)
                 .build();
 
+        bookService.reduceBookInventoryCountBy(order.getCount(), book.get());
+
         return orderRepository.save(order);
     }
 
