@@ -61,4 +61,11 @@ public class OrderService {
 
         return orderRepository.save(order);
     }
+
+    public void updateOrderStatus(long orderId, OrderStatus orderStatus) {
+        Order order = orderRepository.findById(orderId).get();
+        order.setStatus(orderStatus);
+
+        orderRepository.save(order);
+    }
 }

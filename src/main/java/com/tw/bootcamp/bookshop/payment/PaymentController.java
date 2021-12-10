@@ -1,5 +1,6 @@
 package com.tw.bootcamp.bookshop.payment;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,7 @@ public class PaymentController {
     PaymentService paymentService;
 
     @PostMapping("/pay")
-    public ResponseEntity pay(@RequestBody PaymentRequest paymentRequest) throws PaymentFailedException{
+    public ResponseEntity pay(@RequestBody PaymentRequest paymentRequest) throws PaymentFailedException, JsonProcessingException {
         String message = paymentService.pay(paymentRequest);
         return new ResponseEntity(message, HttpStatus.ACCEPTED);
     }
