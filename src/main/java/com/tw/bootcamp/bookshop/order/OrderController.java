@@ -19,7 +19,7 @@ import java.security.Principal;
 
 @RestController
 @RequestMapping("/order")
-@Tag(name = "User Service", description = "APIs for user service")
+@Tag(name = "Order Service", description = "APIs for order service")
 public class OrderController {
 
     @Autowired
