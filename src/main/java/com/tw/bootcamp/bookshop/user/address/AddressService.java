@@ -38,16 +38,20 @@ public class AddressService {
 
     private void unMarkExistingDefaultAddress(CreateAddressRequest createRequest, User user) {
         if (createRequest.isDefault() && isNotEmpty(user.getAddresses())) {
-            List<Address> existingDefaultAddress = user.getAddresses().stream()
-                    .filter(Address::isDefault)
-                    .map(address -> {
-                        address.setDefault(false);
-                        return address;
-                    }).collect(Collectors.toList());
+            List<Address> existingDefaultAddress = getExistingDefaultAddress(user);
+            existingDefaultAddress
+                    .forEach(address -> address.setDefault(false));
             addressRepository.saveAll(existingDefaultAddress);
-
         }
     }
+
+    private List<Address> getExistingDefaultAddress(User user) {
+        return user.getAddresses()
+                .stream()
+                .filter(Address::isDefault)
+                .collect(Collectors.toList());
+    }
+
     public Optional<Address> getById(long addressId) {
         return addressRepository.findById(addressId);
     }
