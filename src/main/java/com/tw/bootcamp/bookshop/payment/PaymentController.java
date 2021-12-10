@@ -21,7 +21,7 @@ public class PaymentController {
     PaymentService paymentService;
 
     @Operation(summary = "Payment Service", description = "Payment to be done for placed Orders", tags = {"Payment Service"})
-    @ApiResponse(responseCode = "200", description = "Payment Successful",
+    @ApiResponse(responseCode = "202", description = "Payment Successful",
             content = @Content(schema = @Schema(implementation = String.class)
             ))
     @ApiResponse(responseCode = "400", description = "Payment Failure",
