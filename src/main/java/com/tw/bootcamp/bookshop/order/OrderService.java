@@ -37,10 +37,12 @@ public class OrderService {
         if (!book.isPresent()) {
             throw new InvalidOrderRequestException("Book not found");
         }
+
         Optional<Address> address = addressService.getById(createOrderRequest.getAddressId());
         if (!address.isPresent()) {
             throw new InvalidOrderRequestException("Address not found");
         }
+
         if (createOrderRequest.getCount() <= 0) {
             throw new InvalidOrderRequestException("Invalid order count");
         }
