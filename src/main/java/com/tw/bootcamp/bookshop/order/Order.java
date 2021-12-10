@@ -34,4 +34,8 @@ public class Order {
     private Money totalAmount;
 
     private OrderStatus status;
+
+    public void setStatus(OrderStatus status) {
+        this.status = status;
+    }
 }
