@@ -82,7 +82,7 @@ public class BookService {
         return foundBooks;
     }
 
-    public List<Book> fetchAllByOrder(String sortBy) {
+    public List<Book> fetchAll(String sortBy) {
         List<Book> books = fetchAll();
         if (sortBy.equalsIgnoreCase("asc")) {
             books.sort(new BookPriceComparator());
