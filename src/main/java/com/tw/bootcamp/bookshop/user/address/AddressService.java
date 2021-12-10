@@ -29,11 +29,15 @@ public class AddressService {
 
     @Transactional
     public Address create(@Valid CreateAddressRequest createRequest, String email) {
-        User user = userService.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        User user = findUser(email);
         unMarkExistingDefaultAddress(createRequest, user);
         Address address = Address.create(createRequest, user);
         return addressRepository.save(address);
+    }
+
+    private User findUser(String email) {
+        return userService.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
     private void unMarkExistingDefaultAddress(CreateAddressRequest createRequest, User user) {
@@ -57,6 +61,6 @@ public class AddressService {
     }
 
     public List<Address> get(String email) {
-        return new ArrayList<>();
+        return findUser(email).getAddresses();
     }
 }

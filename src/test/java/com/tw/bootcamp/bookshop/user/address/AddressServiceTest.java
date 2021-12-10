@@ -7,15 +7,15 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintViolationException;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest
 class AddressServiceTest {
@@ -41,7 +41,8 @@ class AddressServiceTest {
 
         assertNotNull(address);
         assertEquals("4 Privet Drive", address.getLineNoOne());
-        assertEquals(user.getId(), address.getUser().getId());
+        assertEquals(user.getId(), address.getUser()
+                .getId());
     }
 
     @Test
@@ -50,36 +51,36 @@ class AddressServiceTest {
         CreateAddressRequest createRequest = invalidAddress();
 
         assertThrows(ConstraintViolationException.class,
-                ()-> addressService.create(createRequest, user.getEmail()));
+                () -> addressService.create(createRequest, user.getEmail()));
     }
 
     @Test
     void shouldNotCreateAddressWhenUserIsNotValid() {
         CreateAddressRequest createRequest = createAddress();
-        assertThrows(UsernameNotFoundException.class, ()-> addressService.create(createRequest, null));
+        assertThrows(UsernameNotFoundException.class, () -> addressService.create(createRequest, null));
     }
 
     @Test
     void shouldUnMarkHomeAddressAsDefaultIfOfficeAddressIsDefault() {
-        User user = userRepository.save( new UserTestBuilder().build());
-        Address homeAddress = getHomeAddress(user.getEmail());
-        Address officeAddress = getOfficeAddress(user.getEmail(), true);
+        User user = userRepository.save(new UserTestBuilder().build());
+        Address homeAddress = createHomeAddress(user.getEmail());
+        Address officeAddress = createOfficeAddress(user.getEmail(), true);
 
         List<Address> userAddress = addressRepository.findAll();
-       assertTrue(userAddress.stream()
-                        .filter(officeAddress::equals)
-                                .anyMatch(Address::isDefault), "Office address should be default");
+        assertTrue(userAddress.stream()
+                .filter(officeAddress::equals)
+                .anyMatch(Address::isDefault), "Office address should be default");
 
         assertTrue(userAddress.stream()
                 .filter(homeAddress::equals)
                 .anyMatch(address -> !address.isDefault()), "Home address should not be default");
-  }
+    }
 
     @Test
     void shouldNotUnMarkHomeAddressAsDefaultIfOfficeAddressIsNotDefault() {
-        User user = userRepository.save( new UserTestBuilder().build());
-        Address homeAddress = getHomeAddress(user.getEmail());
-        Address officeAddress = getOfficeAddress(user.getEmail(), false);
+        User user = userRepository.save(new UserTestBuilder().build());
+        Address homeAddress = createHomeAddress(user.getEmail());
+        Address officeAddress = createOfficeAddress(user.getEmail(), false);
 
         List<Address> userAddress = addressRepository.findAll();
         assertTrue(userAddress.stream()
@@ -91,12 +92,29 @@ class AddressServiceTest {
                 .anyMatch(Address::isDefault), "Home address should be default");
     }
 
-    private Address getOfficeAddress(String email, boolean isDefault) {
+    @Test
+    void shouldReturnAddressListForUserWhenPresent() {
+        User user = userRepository.save(new UserTestBuilder().build());
+        Address homeAddress = createHomeAddress(user.getEmail());
+        Address officeAddress = createOfficeAddress(user.getEmail(), false);
+
+        List<Address> userAddressList = addressService.get(user.getEmail());
+        assertIterableEquals(Arrays.asList(homeAddress, officeAddress), userAddressList);
+    }
+
+    @Test
+    void shouldThrowErrorWhenUserNotPresent() {
+        UsernameNotFoundException usernameNotFoundException = assertThrows(UsernameNotFoundException.class,
+                () -> addressService.get(any(String.class)));
+        assertEquals("User not found", usernameNotFoundException.getMessage());
+    }
+
+    private Address createOfficeAddress(String email, boolean isDefault) {
         CreateAddressRequest createOfficeRequest = createOfficeAddress(isDefault);
         return addressService.create(createOfficeRequest, email);
     }
 
-    private Address getHomeAddress(String email) {
+    private Address createHomeAddress(String email) {
         CreateAddressRequest createHomeRequest = createAddress(true);
         return addressService.create(createHomeRequest, email);
     }
@@ -114,6 +132,7 @@ class AddressServiceTest {
     private CreateAddressRequest createAddress() {
         return createAddress(true);
     }
+
     private CreateAddressRequest createAddress(boolean isDefault) {
         return CreateAddressRequest.builder()
                 .lineNoOne("4 Privet Drive")
@@ -124,6 +143,7 @@ class AddressServiceTest {
                 .isDefault(isDefault)
                 .build();
     }
+
     private CreateAddressRequest createOfficeAddress(boolean isDefault) {
         return CreateAddressRequest.builder()
                 .lineNoOne("Earth office")
