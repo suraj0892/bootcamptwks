@@ -1,9 +1,11 @@
 package com.tw.bootcamp.bookshop.order;
 
 import com.tw.bootcamp.bookshop.book.BookService;
+import com.tw.bootcamp.bookshop.documentation.OrderBookDocumentation;
 import com.tw.bootcamp.bookshop.user.User;
 import com.tw.bootcamp.bookshop.user.UserService;
 import com.tw.bootcamp.bookshop.user.address.AddressService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,12 +19,14 @@ import java.security.Principal;
 
 @RestController
 @RequestMapping("/order")
+@Tag(name = "User Service", description = "APIs for user service")
 public class OrderController {
 
     @Autowired
     OrderService orderService;
 
     @PostMapping
+    @OrderBookDocumentation
     ResponseEntity<Order> create(@RequestBody CreateOrderRequest createOrderRequest, Principal principal) throws InvalidOrderRequestException {
         createOrderRequest.setUserEmail(principal.getName());
         Order order = orderService.create(createOrderRequest);
