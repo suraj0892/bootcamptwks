@@ -26,6 +26,7 @@ public class BasicAuthConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers(HttpMethod.POST,"/users").permitAll()
+                .antMatchers(HttpMethod.POST,"/books/**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers(HttpMethod.GET,"/admin/**").hasRole(String.valueOf(Role.ADMIN))
                 .antMatchers(HttpMethod.POST,"/admin/**").hasRole(String.valueOf(Role.ADMIN))
