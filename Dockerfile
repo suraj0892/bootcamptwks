@@ -1,5 +1,6 @@
 FROM openjdk:8-jdk-alpine
 
+
 RUN addgroup -S spring && adduser -S springuser -G spring
 USER springuser
 WORKDIR /home/springuser
